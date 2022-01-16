@@ -19,7 +19,7 @@ install_requires = [
     "redis>=4.1.0",
     "scipy",
     "peakutils==1.3.3",
-    "urllib3==1.26.7",
+    "urllib3==1.25.4",
 ]
 
 setup(

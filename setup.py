@@ -11,18 +11,15 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
-    "pandas>=1.2.4",
-    "numpy>=1.20",
-    "scikit-learn>=1.0.1",
-    "plotly>=5.1.0 ",
+    "pandas>=1.3.5",
+    "openpyxl",
+    "plotly>=5.5.0 ",
     "dash>=2.0.0",
     "dash-bootstrap-components>=1.0.0",
-    "multiprocess>=0.70",
-    "diskcache>=5.3.0",
-    "psutil>=5.8.0",
-    "redis>=3.5.3",
-    "celery>=5.2.1",
-    "jsonpickle>=2.0.0",
+    "redis>=4.1.0",
+    "scipy",
+    "peakutils==1.3.3",
+    "urllib3==1.26.7"
 ]
 
 setup(

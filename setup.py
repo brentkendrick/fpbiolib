@@ -15,7 +15,7 @@ install_requires = [
     "openpyxl",
     "plotly>=5.5.0 ",
     "dash>=2.0.0",
-    "dash-bootstrap-components>=1.0.0",
+    "dash-bootstrap-components>=1.0.2",
     "redis>=4.1.0",
     "scipy",
     "peakutils==1.3.3",

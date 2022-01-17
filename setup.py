@@ -1,5 +1,5 @@
 import sys
-import fpbio-tools
+import fpbiolib
 
 from setuptools import setup, find_packages
 
@@ -7,7 +7,7 @@ with open("README.md") as f:
     long_desc = f.read()
 
 if sys.version_info < (3, 5):
-    print("ERROR: fpbio-tools tools require at least Python 3.5 to run")
+    print("ERROR: fpbiolib tools require at least Python 3.5 to run")
     sys.exit(1)
 
 install_requires = [
@@ -23,13 +23,13 @@ install_requires = [
 ]
 
 setup(
-    name="fpbio-tools",
-    version=fpbio-tools.__version__,
+    name="fpbiolib",
+    version=fpbiolib.__version__,
     url="",
     author="Brent Kendrick",
     author_email="brent.kendrick@fp-biopharma.com",
     license="MIT",
-    description="fpbio-tools",
+    description="fpbiolib",
     long_description=long_desc,
     long_description_content_type="text/markdown",
     platforms="any",

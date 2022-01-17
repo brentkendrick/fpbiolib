@@ -11,7 +11,6 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
-    "redis>=4.1.0",
 ]
 
 setup(

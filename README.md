@@ -8,7 +8,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install fpbioli
 Rerun this command to check for and install updates .
 
 ```bash
-pip install git+https://github.com/brentkendrick/fpbiolib
+pip install -I git+https://github.com/brentkendrick/fpbiolib
 ```
 
 ## Usage

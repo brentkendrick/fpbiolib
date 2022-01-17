@@ -10,6 +10,10 @@ from redis import Redis
 
 from config.settings import REDIS_URL
 
+from decouple import config
+
+REDIS_URL = config('REDIS_URL')
+
 r = Redis.from_url(REDIS_URL, decode_responses=True)  # use if running docker
 
 # r = Redis(host='127.0.0.1', port=6379, db=0) #use if running local redis

@@ -1,14 +1,14 @@
-# Tracetools
+# fpbio-tools
 
-Tracetools is a Python package that contains handy functions.
+fpbio-tools is a Python package that contains handy functions.
 
 ## Installation and updating
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Tracetools like below.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install fpbio-tools like below.
 Rerun this command to check for and install updates .
 
 ```bash
-pip install git+https://github.com/brentkendrick/tracetools
+pip install git+https://github.com/brentkendrick/fpbio-tools
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ Features:
 #### Demo of some of the features:
 
 ```python
-from tracetools import baselines.rubberband
+from fpbio-tools import baselines.rubberband
 
 ```
 

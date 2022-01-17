@@ -13,8 +13,7 @@ pip install -I git+https://github.com/brentkendrick/fpbiolib
 
 ### Redis usage
 
-The redis_storage module requires either a local instance of redis running on the host computer, or a docker instance of redis. This can be switched through the use of an environment variable, which can be set by creating a .env file in your project's root directory setup following the example below. The environment variable
-can be accessed in your project by installing python-decouple using pip. See the documentation here: https://pypi.org/project/python-decouple/
+The redis_storage module requires either a local instance of redis running on the host computer, or a docker instance of redis. This can be switched through the use of an environment variable, which can be set by creating a .env file in your project's root directory setup following the example below.
 
 ```
 # If running local redis. Install for WSL2 using instructions here:
@@ -31,6 +30,17 @@ REDIS_URL=redis://127.0.0.1:6379/0
 # load the updated .env variable.
 
 # REDIS_URL=redis://redis:6379/0
+```
+
+The environment variable
+can be accessed in your project by installing python-decouple using pip. See the documentation here: https://pypi.org/project/python-decouple/. To see an example in this project, go to the module named redis_storage.py and look for the following code:
+
+```
+from decouple import config
+
+REDIS_URL = config('REDIS_URL')
+
+r = Redis.from_url(REDIS_URL, decode_responses=True)
 ```
 
 ## Usage

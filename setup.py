@@ -11,15 +11,7 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
-    "pandas>=1.3.5",
-    "openpyxl",
-    "plotly>=5.5.0 ",
-    "dash>=2.0.0",
-    "dash-bootstrap-components>=1.0.2",
     "redis>=4.1.0",
-    "scipy",
-    "peakutils==1.3.3",
-    "urllib3==1.25.4",
 ]
 
 setup(

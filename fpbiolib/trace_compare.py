@@ -9,7 +9,8 @@ def wss(y, y_fit):
     wss_sq = 0
     for i in range(n):
         wss_sq = (
-            wss_sq + (1 / n) * (abs(y[i]) / abs(y_avg)) * ((y_fit[i]) - (y[i])) ** 2
+            wss_sq
+            + (1 / n) * (abs(y[i]) / abs(y_avg)) * ((y_fit[i]) - (y[i])) ** 2
         )
     wss = 1 - 100 * math.sqrt(wss_sq)
     return wss
@@ -22,7 +23,8 @@ def wsd(y, y_fit):
     wsd_sq = 0
     for i in range(n):
         wsd_sq = (
-            wsd_sq + (1 / n) * (abs(y[i]) / abs(y_avg)) * ((y_fit[i]) - (y[i])) ** 2
+            wsd_sq
+            + (1 / n) * (abs(y[i]) / abs(y_avg)) * ((y_fit[i]) - (y[i])) ** 2
         )
     wsd = math.sqrt(wsd_sq)
     return wsd
@@ -41,7 +43,9 @@ def overlap(x, y, y_comp):
 
     y_comp_cor = np.asarray(y_comp_cor_list)  # corrected y comparison array
 
-    y_comp_area = np.trapz(y_comp_cor, x)  # integrate area of y comparison array
+    y_comp_area = np.trapz(
+        y_comp_cor, x
+    )  # integrate area of y comparison array
 
     if not y_comp_area == 0:
         y_comp_norm = (

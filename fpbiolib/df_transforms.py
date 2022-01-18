@@ -165,7 +165,9 @@ def x_reduced(x):
     new_x_end = (
         math.floor(x[-1] * 100) / 100
     )  # mult then div by 100 to get sig figs we want
-    return np.arange(new_x_start, new_x_end, data_spacing)  # new x-data spacing/range
+    return np.arange(
+        new_x_start, new_x_end, data_spacing
+    )  # new x-data spacing/range
 
 
 def df_reduced(df_r_in):
@@ -232,7 +234,7 @@ def df_center(df, df_ctr_pks, thres, min_dist):
 
 def find_deriv(df, flip, window_length=5):
     """Adds the 2nd derivative of the chosen signal to the DataFrame
-        Window_length=5 is recommended from our studies"""
+    Window_length=5 is recommended from our studies"""
 
     proteins = list(df.columns)[1:]
 
@@ -244,7 +246,9 @@ def find_deriv(df, flip, window_length=5):
                 df[i], deriv=2, window_length=window_length, polyorder=3
             )
         else:
-            dd = savgol_filter(df[i], deriv=2, window_length=window_length, polyorder=3)
+            dd = savgol_filter(
+                df[i], deriv=2, window_length=window_length, polyorder=3
+            )
 
         df[i] = dd
 

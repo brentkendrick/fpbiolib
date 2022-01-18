@@ -48,7 +48,9 @@ def parse_data(contents, filename):
             df = pd.read_excel(io.BytesIO(decoded))
         elif "txt" or "tsv" in filename:
             # Assume that the user upl, delimiter = r'\s+'oaded an excel file
-            df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), delimiter=r"\s+")
+            df = pd.read_csv(
+                io.StringIO(decoded.decode("utf-8")), delimiter=r"\s+"
+            )
     except Exception as e:
         print(e)
         raise
@@ -123,7 +125,8 @@ def parse_uploaded_traces(contents, filenames, changed_id):
     # rename any duplicate column names
     for dup in cols[cols.duplicated()].unique():
         cols[cols[cols == dup].index.values.tolist()] = [
-            dup + "." + str(i) if i != 0 else dup for i in range(sum(cols == dup))
+            dup + "." + str(i) if i != 0 else dup
+            for i in range(sum(cols == dup))
         ]
 
     # rename the columns with the cols list.

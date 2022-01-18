@@ -28,7 +28,10 @@ def parse_pk_label_div(sel_trace, content, filename):
                         dbc.Checklist(
                             id="x_labels",
                             options=[
-                                {"label": " Label peaks with x-value", "value": True},
+                                {
+                                    "label": " Label peaks with x-value",
+                                    "value": True,
+                                },
                             ],
                             value=False,
                             switch=False,
@@ -60,7 +63,9 @@ def parse_pk_label_div(sel_trace, content, filename):
                     dbc.Col(
                         dcc.Dropdown(
                             id="dropdown_pk_label_trace",
-                            options=[{"label": i, "value": i} for i in sel_trace],
+                            options=[
+                                {"label": i, "value": i} for i in sel_trace
+                            ],
                             # value=sel_trace[0],
                             searchable=False,
                             clearable=False,
@@ -71,7 +76,9 @@ def parse_pk_label_div(sel_trace, content, filename):
                     dbc.Col(
                         dcc.Dropdown(
                             id="dropdown_pk_label_x_val",
-                            options=[{"label": i, "value": i} for i in label_list],
+                            options=[
+                                {"label": i, "value": i} for i in label_list
+                            ],
                             value="",
                             searchable=False,
                             clearable=False,
@@ -82,7 +89,9 @@ def parse_pk_label_div(sel_trace, content, filename):
                     dbc.Col(
                         dcc.Dropdown(
                             id="dropdown_pk_label",
-                            options=[{"label": i, "value": i} for i in label_list],
+                            options=[
+                                {"label": i, "value": i} for i in label_list
+                            ],
                             value="",
                             searchable=False,
                             clearable=False,
@@ -97,9 +106,13 @@ def parse_pk_label_div(sel_trace, content, filename):
                     dash_table.DataTable(
                         id="label_table",
                         # export_format='xlsx',
-                        columns=[{"name": i, "id": i} for i in label_df.columns],
+                        columns=[
+                            {"name": i, "id": i} for i in label_df.columns
+                        ],
                         page_size=10,
-                        data=label_df.to_dict("records"),  # the contents of the table
+                        data=label_df.to_dict(
+                            "records"
+                        ),  # the contents of the table
                         editable=True,
                         fixed_rows={"headers": True, "data": 0},
                         style_header={
@@ -127,7 +140,10 @@ def parse_pk_label_div(sel_trace, content, filename):
                                 "rule": "background-color: LightBlue; font-family: Arial; opacity: 1.0",
                                 "white-space": "pre-wrap",
                             },
-                            {"selector": ".show-hide", "rule": "display: none"},
+                            {
+                                "selector": ".show-hide",
+                                "rule": "display: none",
+                            },
                         ],
                     ),
                     dbc.Button(

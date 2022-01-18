@@ -6,7 +6,7 @@ from scipy import optimize
 
 
 def guess_heights(df, col, center_list, gain=0.95):
-    """ Determines guesses for the heights based on measured data.
+    """Determines guesses for the heights based on measured data.
 
     Function creates an integer mapping to the measured frequencies, and then
     creates an initial peak height guess of gain*actual height at x=freq*. A
@@ -44,12 +44,14 @@ def guess_heights(df, col, center_list, gain=0.95):
     return heights
 
 
-def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=dict()):
+def gaussian_least_squares(
+    df, col, peaks=yang_h20_2015, peak_width=5, params=dict()
+):
     if not col:
         col = df.columns[1]
 
     def fun(p, x, y):
-        """ Minimizing across parameter space p, for a given range, x"""
+        """Minimizing across parameter space p, for a given range, x"""
         return gaussian_sum(x, *p) - y
 
     data = np.array(pd.concat([df.iloc[:, 0], df[col]], axis=1))
@@ -60,7 +62,9 @@ def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=di
     guess = list()
 
     # Make 1-D array for optimization func definition above
-    for mean, bound, height in zip(peaks["means"], peaks["uncertainties"], heights):
+    for mean, bound, height in zip(
+        peaks["means"], peaks["uncertainties"], heights
+    ):
         lb.extend([0, bound[0], 0])
         ubh = np.inf if height <= 0 else height
         ub.extend([ubh, bound[1], peak_width * 1])
@@ -81,20 +85,17 @@ def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=di
 
 
 def gaussian(x, height, center, width):
-    """ Function defining a gaussian distribution
-    """
+    """Function defining a gaussian distribution"""
     return height * np.exp(-((x - center) ** 2) / (2 * width ** 2))
 
 
 def gaussian_sum(x, *args):
-    """ Returns the sum of the gaussian function inputs
-    """
+    """Returns the sum of the gaussian function inputs"""
     return sum(gaussian_list(x, *args))
 
 
 def gaussian_list(x, *args):
-    """ Returns the sum of the gaussian function inputs
-    """
+    """Returns the sum of the gaussian function inputs"""
     if len(args) % 3 != 0:
         raise ValueError("Args must divisible by 3")
     gausslist = []
@@ -116,14 +117,16 @@ def gaussian_list(x, *args):
 
 
 def gaussian_integral(height, width):
-    """ Returns the integral of a gaussian curve with the given height, width
+    """Returns the integral of a gaussian curve with the given height, width
     and center
     """
     return height * width * math.sqrt(2 * math.pi)
 
 
 def gaussians_to_df(df, gaussian_list_data, fitted_trace):
-    tmp_col_names = [f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)]
+    tmp_col_names = [
+        f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)
+    ]
     gaussian_df = pd.DataFrame(gaussian_list_data).transpose()
     gaussian_df.columns = tmp_col_names
     gaussian_df.insert(0, df.columns[0], df.iloc[:, 0])

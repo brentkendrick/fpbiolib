@@ -99,7 +99,9 @@ primary_layout = go.Layout(
         tickwidth=2,
         ticklen=10,
     ),
-    legend=dict(traceorder="reversed", yanchor="top", y=0.99, xanchor="left", x=0.01),
+    legend=dict(
+        traceorder="reversed", yanchor="top", y=0.99, xanchor="left", x=0.01
+    ),
     modebar=dict(
         orientation="h",
         bgcolor="white",
@@ -148,9 +150,13 @@ def primary_graph(
     )
 
     if legend_position == "left":
-        fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01))
+        fig.update_layout(
+            legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+        )
     else:
-        fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99))
+        fig.update_layout(
+            legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99)
+        )
 
     if reverse:
         fig.update_layout(
@@ -249,8 +255,13 @@ def primary_graph(
         mirror=True,
     )
     fig.update_layout(
-        yaxis=dict(range=[min_y, max_y / zoom_level], title_text=y_label,),
-        xaxis=dict(title_text=x_label,),
+        yaxis=dict(
+            range=[min_y, max_y / zoom_level],
+            title_text=y_label,
+        ),
+        xaxis=dict(
+            title_text=x_label,
+        ),
     )
     # Override default behavior to hide legend if only 1 trace plotted
     fig["data"][0]["showlegend"] = True
@@ -269,10 +280,14 @@ def baseline_check_graph(x_val, y_val, base, zoom_level=1):
 
     # Add traces
     fig.add_trace(
-        go.Scatter(x=x_val, y=(y_val - base), mode="lines", name="baseline corrected")
+        go.Scatter(
+            x=x_val, y=(y_val - base), mode="lines", name="baseline corrected"
+        )
     )
     fig.add_trace(
-        go.Scatter(x=x_val, y=y_val - base.min(), mode="lines", name="original")
+        go.Scatter(
+            x=x_val, y=y_val - base.min(), mode="lines", name="original"
+        )
     )
     fig.add_trace(
         go.Scatter(x=x_val, y=base - base.min(), mode="lines", name="baseline")
@@ -315,7 +330,11 @@ def peak_ctr_check_graph3b(
     for i in range(len(x_active[indexes].tolist())):
         if labels:
             fig.add_annotation(
-                dict(x=x_active[indexes][i], y=y_active[indexes][i], text=pk_labels[i],)
+                dict(
+                    x=x_active[indexes][i],
+                    y=y_active[indexes][i],
+                    text=pk_labels[i],
+                )
             )
             i += 1
         else:
@@ -385,13 +404,17 @@ def axis_ticks(a, zoom, dfmax, y_ax):
         tick_spc_maj = 10 ** (int(delta_mag))
         tick_spc = tick_spc_maj / 5
         #         tick_vals_major = list(np.around((np.arange(tick_low, tick_hi+tick_spc*1, tick_spc_maj)), decimals = magnitude(a_max)-4))
-        tick_vals_major = list(np.arange(tick_low, tick_hi * zoom, tick_spc_maj))
+        tick_vals_major = list(
+            np.arange(tick_low, tick_hi * zoom, tick_spc_maj)
+        )
         tick_vals = list(np.arange(tick_low, tick_hi * zoom, tick_spc))
     else:
         tick_spc_maj = (10 ** (int(delta_mag))) / 2
         tick_spc = tick_spc_maj / 5
         #         tick_vals_major = list(np.around((np.arange(tick_low, tick_hi+tick_spc*1, tick_spc_maj)), decimals = magnitude(a_max)-4))
-        tick_vals_major = list(np.arange(tick_low, tick_hi * zoom, tick_spc_maj))
+        tick_vals_major = list(
+            np.arange(tick_low, tick_hi * zoom, tick_spc_maj)
+        )
         tick_vals = list(np.arange(tick_low, tick_hi * zoom, tick_spc * zoom))
 
     #     if y_ax:
@@ -428,7 +451,9 @@ def roundup(
     x, val
 ):  # x is value to be rounded, val is the placevalue, i.e. 100, 10, 1, 0.1, 0.01, etc. to be rounded to
     return (
-        x if x % val == 0 else round((x + val - x % val), -int(math.log10(val)))
+        x
+        if x % val == 0
+        else round((x + val - x % val), -int(math.log10(val)))
     )  # python has floating point issues, only soln seems to round again here.
 
 
@@ -502,7 +527,9 @@ def Simple_plot(df):
     ydata = df.iloc[:, 1]
     # Add traces
     fig.add_trace(
-        go.Scatter(x=xdata, y=ydata, mode="lines", name="original"), row=1, col=1
+        go.Scatter(x=xdata, y=ydata, mode="lines", name="original"),
+        row=1,
+        col=1,
     )
 
     fig["layout"].update(basic_layout)
@@ -578,10 +605,14 @@ def Gaussian_plots(df, col, peak_list, linewidth=1.2, reverse=False):
     y_fit = sum(peak_list)
     # Add traces
     fig.add_trace(
-        go.Scatter(x=xdata, y=df[col], mode="lines", name="original"), row=1, col=1
+        go.Scatter(x=xdata, y=df[col], mode="lines", name="original"),
+        row=1,
+        col=1,
     )
     fig.add_trace(
-        go.Scatter(x=xdata, y=y_fit, mode="lines", name="Model fit"), row=1, col=1
+        go.Scatter(x=xdata, y=y_fit, mode="lines", name="Model fit"),
+        row=1,
+        col=1,
     )
     for i in range(len(peak_list)):
         fig.add_trace(
@@ -598,7 +629,9 @@ def Gaussian_plots(df, col, peak_list, linewidth=1.2, reverse=False):
     # Add subplot with residuals
     resid = df[col] - y_fit
     fig.add_trace(
-        go.Scatter(x=xdata, y=resid, mode="lines", name="residuals"), row=2, col=1
+        go.Scatter(x=xdata, y=resid, mode="lines", name="residuals"),
+        row=2,
+        col=1,
     )
     fig["layout"].update(layout)
 

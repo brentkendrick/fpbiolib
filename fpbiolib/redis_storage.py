@@ -12,7 +12,7 @@ from redis import Redis
 
 from decouple import config
 
-REDIS_URL = config('REDIS_URL')
+REDIS_URL = config("REDIS_URL")
 
 r = Redis.from_url(REDIS_URL, decode_responses=True)  # use if running docker
 

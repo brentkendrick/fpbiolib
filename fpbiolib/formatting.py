@@ -6,13 +6,25 @@ import math
 def slider_marks(x_min, x_max, num_points):
     abs_delta = abs(x_max - x_min)
     if abs_delta >= 1.0:
-        marks = {i: "{:.0f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
+        marks = {
+            i: "{:.0f}".format(i)
+            for i in np.linspace(x_min, x_max, num_points)
+        }
     elif abs_delta >= 0.10:
-        marks = {i: "{:.1f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
+        marks = {
+            i: "{:.1f}".format(i)
+            for i in np.linspace(x_min, x_max, num_points)
+        }
     elif abs_delta >= 0.010:
-        marks = {i: "{:.2f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
+        marks = {
+            i: "{:.2f}".format(i)
+            for i in np.linspace(x_min, x_max, num_points)
+        }
     else:
-        marks = {i: "{:.3f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
+        marks = {
+            i: "{:.3f}".format(i)
+            for i in np.linspace(x_min, x_max, num_points)
+        }
     return marks
 
 
@@ -23,7 +35,9 @@ def generate_table(dataframe, max_rows=10):
         +
         # Body
         [
-            html.Tr([html.Td(dataframe.iloc[i][col]) for col in dataframe.columns])
+            html.Tr(
+                [html.Td(dataframe.iloc[i][col]) for col in dataframe.columns]
+            )
             for i in range(min(len(dataframe), max_rows))
         ]
     )

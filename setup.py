@@ -11,6 +11,11 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
+    "pandas>=1.2.4",
+    "plotly>=5.1.0 ",
+    "dash>=2.0.0",
+    "dash-bootstrap-components>=1.0.0",
+    "redis>=3.5.3",
 ]
 
 setup(

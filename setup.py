@@ -16,6 +16,7 @@ install_requires = [
     "dash>=2.0.0",
     "dash-bootstrap-components>=1.0.0",
     "redis>=3.5.3",
+    "python-decouple",
 ]
 
 setup(

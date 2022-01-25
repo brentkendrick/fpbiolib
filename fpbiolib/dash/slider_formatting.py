@@ -13,7 +13,7 @@ def slider_marks(x_min, x_max, num_points):
         marks = {i: "{:.2f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
     else:
         marks = {i: "{:.3f}".format(i) for i in np.linspace(x_min, x_max, num_points)}
-    return marks
+    return {int(k) if k.is_integer() else k: v for k, v in marks.items()}
 
 
 def generate_table(dataframe, max_rows=10):
@@ -43,7 +43,53 @@ def sci_notation(num, sig_figs):
 def slider_num_formatter(
     num, sci_sig_figs=3, sci_note_upper=10000, sci_note_lower=0.01
 ):
-    if num >= sci_note_upper or num < sci_note_lower:
+    if num == 0:
+        return "0"
+    elif num >= sci_note_upper or num < sci_note_lower:
         return sci_notation(num, sci_sig_figs)
     else:
         return dec_notation(num, sci_note_upper).rstrip("0").rstrip(".")
+
+
+def round_up_nearest_order_mag(x):
+    return 10 ** (math.ceil(math.log10(abs(x))))
+
+
+def slider_log_intervals(max_x):
+    upper_interval = round_up_nearest_order_mag(max_x)
+    log_intervals = []
+    for i in range(7):
+        log_intervals.append(int(math.log10(upper_interval) + i - 6))
+    return log_intervals
+
+
+def ten_to_the_x(value):
+    if type(value) == list:
+        valueList = []
+        for i in value:
+            valueList.append(10 ** i)
+        return valueList
+    else:
+        return 10 ** value
+
+
+def slider_log_intervals_float(max_x):
+    upper_interval = round_up_nearest_order_mag(max_x)
+    log_intervals = []
+    for i in range(7):
+        log_intervals.append(int(math.log10(upper_interval) + i - 6))
+    return log_intervals
+
+
+def slider_log_mark_format(log_intervals, integer_only=True):
+    marks = {(i): "{:#.3g}".format(10 ** i) for i in log_intervals[1:]}
+    # for some reason, marks that are 1.0, 10.0, etc must be converted to integers to display in the slider
+    if integer_only:
+        marks = {
+            int(k): "{:.0f}".format(float(v))
+            for k, v in marks.items()
+            if k.is_integer()
+        }
+    else:
+        marks = {int(k) if k.is_integer() else k: v for k, v in marks.items()}
+    return marks

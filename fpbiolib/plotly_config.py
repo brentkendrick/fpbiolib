@@ -14,9 +14,7 @@ config = {
         "height": 500,
         "format": "png",
     },  # one of png, svg, jpeg, webp},
-    "modeBarButtonsToRemove": [
-        "toggleSpikelines",
-    ]
+    "modeBarButtonsToRemove": ["toggleSpikelines",]
     #             'modeBarButtonsToAdd':['drawline',
     #                                         'drawopenpath',
     #                                         'drawclosedpath',

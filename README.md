@@ -33,7 +33,7 @@ To install from AWS CodeArtifact you can use the AWS CLI to autheticate pip
 as follows.
 
 ```bash
-aws codeartifact login --tool pip --repository fpbiolib --domain norbi --domain-owner 979711578039
+aws codeartifact login --tool pip --repository norbi --domain norbi --domain-owner 979711578039
 ```
 
 To install in docker or environments that do not have AWS CLI available you can
@@ -43,7 +43,7 @@ you can manually create a pip index url using the following
 ARG AWS_DEFAULT_REGION=us-east-2
 ARG AWS_DOMAIN_OWNER=979711578039
 ARG CODEARTIFACT_DOMAIN=norbi
-ARG CODEARTIFACT_REPO=fpbiolib
+ARG CODEARTIFACT_REPO=norbi
 ARG CODEARTIFACT_AUTH_TOKEN  # no default, longest possible token 12 hours
 ARG PIP_INDEX_URL="https://aws:${CODEARTIFACT_AUTH_TOKEN}@${CODEARTIFACT_DOMAIN}-${AWS_DOMAIN_OWNER}.d.codeartifact.${AWS_DEFAULT_REGION}.amazonaws.com/pypi/${CODEARTIFACT_REPO}/simple/"
 
@@ -61,7 +61,7 @@ Push to CodeArtifact as follows. (must pip install twine first)
 ```bash
 black --line-length 79 .
 python setup.py sdist bdist_wheel
-aws codeartifact login --tool twine --domain norbi --repository fpbiolib
+aws codeartifact login --tool twine --domain norbi --repository norbi
 twine upload --repository codeartifact dist/*
 ```
 
@@ -75,24 +75,29 @@ The redis_storage module requires either a local instance of redis running on th
 
 # To start the local redis server: sudo service redis-server start
 # To stop: sudo service redis-server stop
-
-REDIS_URL=redis://127.0.0.1:6379/0
-
-
-# If running with docker-compose and redis instance, comment the above
-# line and uncomment the line below.  Save and restart your project to
-# load the updated .env variable.
-
-# REDIS_URL=redis://redis:6379/0
 ```
 
-The environment variable
-can be accessed in your project by installing python-decouple using pip. See the documentation here: https://pypi.org/project/python-decouple/. To see an example in this project, go to the module named redis_storage.py and look for the following code:
+The environment variables in the .env file
+can be accessed in your project by installing python-dotenv using pip. Then, create a settings.py
+file in a root folder titled "config". Inside
+settings.py use a command as in the following
+example to allow the .env variables to be
+activated when called.
+
+config/settings.py
 
 ```
-from decouple import config
+import os
 
-REDIS_URL = config('REDIS_URL')
+# Redis default
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+```
+
+fpbiolib/redis_storage.py
+
+```
+
+from config.settings import REDIS_URL
 
 r = Redis.from_url(REDIS_URL, decode_responses=True)
 ```

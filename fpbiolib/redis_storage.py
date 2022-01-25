@@ -8,11 +8,7 @@ import pandas as pd
 import json
 from redis import Redis
 
-# from config.settings import REDIS_URL
-
-from decouple import config
-
-REDIS_URL = config("REDIS_URL")
+from config.settings import REDIS_URL
 
 r = Redis.from_url(REDIS_URL, decode_responses=True)  # use if running docker
 

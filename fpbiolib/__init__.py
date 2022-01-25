@@ -1,7 +1,7 @@
 # import subprocess
 
 # base version number
-__version__ = "0.0.1"
+__version__ = "0.0.4"
 
 
 # # Get git commit as string to append to version

@@ -2,7 +2,7 @@
 # see: https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
 config = {
     # 'uirevision': cols,
-    "edits": {"axisTitleText": False, "titleText": False, "legendText": False},
+    "edits": {"axisTitleText": True, "titleText": False, "legendText": True},
     "scrollZoom": True,
     "displayModeBar": True,
     "editable": True,
@@ -14,7 +14,9 @@ config = {
         "height": 500,
         "format": "png",
     },  # one of png, svg, jpeg, webp},
-    "modeBarButtonsToRemove": ["toggleSpikelines",]
+    "modeBarButtonsToRemove": [
+        "toggleSpikelines",
+    ]
     #             'modeBarButtonsToAdd':['drawline',
     #                                         'drawopenpath',
     #                                         'drawclosedpath',

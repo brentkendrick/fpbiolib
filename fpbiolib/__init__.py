@@ -1,21 +1,12 @@
-# import subprocess
-
 # base version number
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 
-# # Get git commit as string to append to version
-# def get_git_revision_short_hash():
-#     return (
-#         subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
-#         .decode("ascii")
-#         .strip()
-#     )
-
-
-# # append git commit if possible
-# try:
-#     commit = get_git_revision_short_hash()
-#     __version__ += "-" + commit
-# except subprocess.CalledProcessError:
-#     pass
+from .rounders import (
+    base_roundup,
+    base_rounddown,
+    interval_range,
+    round_down_nearest_order_mag,
+    round_up_nearest_order_mag,
+)
+from .characters import get_super, to_sup, dec_notation, sci_notation

@@ -26,7 +26,19 @@ assignments : List
 
 # Dong et. al., Biochemistry. 1990
 dong_h2o_1990 = {
-    "means": [1624, 1627, 1632, 1638, 1642, 1650, 1656, 1666, 1672, 1680, 1688],
+    "means": [
+        1624,
+        1627,
+        1632,
+        1638,
+        1642,
+        1650,
+        1656,
+        1666,
+        1672,
+        1680,
+        1688,
+    ],
     "uncertainties": [
         (1623.5, 1624.5),
         (1626, 1628),
@@ -170,7 +182,20 @@ yang_h20_2015_w_side_chains = {
 }
 
 yang_d20_2015 = {
-    "means": [1624, 1631, 1637, 1641, 1645, 1653, 1663, 1671, 1675, 1683, 1689, 1694],
+    "means": [
+        1624,
+        1631,
+        1637,
+        1641,
+        1645,
+        1653,
+        1663,
+        1671,
+        1675,
+        1683,
+        1689,
+        1694,
+    ],
     "uncertainties": [
         (1620, 1628),
         (1628, 1634),
@@ -204,7 +229,7 @@ yang_d20_2015 = {
 
 
 def secondary_structure(areas, peaks):
-    """ Returns secondary structure content
+    """Returns secondary structure content
 
     Takes ordered area definitions and peak definitions and returns secondary
     structure quantities.

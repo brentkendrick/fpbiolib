@@ -1,0 +1,6 @@
+black
+setuptools
+wheel
+twine
+pandas
+scipy

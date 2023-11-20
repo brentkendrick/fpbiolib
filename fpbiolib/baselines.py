@@ -9,13 +9,19 @@ from scipy.optimize import curve_fit
 import pandas as pd
 import numpy as np
 
-from .df_transforms import df_trunc
+from chemlabparser.tools.df_transforms import df_trunc
 
 
 def sd_baseline_correction(
-    df, cols=None, freq=0, flip=False, method="min", bounds=[1550, 1750], inplace=False
+    df,
+    cols=None,
+    freq=0,
+    flip=False,
+    method="min",
+    bounds=[1550, 1750],
+    inplace=False,
 ):
-    """ Performs a baseline subtraction on second derivative spectra
+    """Performs a baseline subtraction on second derivative spectra
 
     Returns a dataframe of the baseline subtracted data. The dataframe can be
     modified in place, or unmodified with a new dataframe being returned. There
@@ -65,11 +71,11 @@ def sd_baseline_correction(
     """
 
     def minimum(spec):
-        """ `minimum` value subtraction function applied to the dataframe """
+        """`minimum` value subtraction function applied to the dataframe"""
         return spec - spec.min()
 
     def straight(x, y):
-        """ `straight` subtract straight baseline applied to the dataframe """
+        """`straight` subtract straight baseline applied to the dataframe"""
         bsln = (y[-1] - y[0]) / (x[-1] - x[0]) * (x - x[-1]) + y[-1]
         return y - bsln
 
@@ -88,7 +94,7 @@ def sd_baseline_correction(
     #         return z
 
     def rubberband(x, y):
-        """ `rubberband` subtraction function """
+        """`rubberband` subtraction function"""
         v = ConvexHull(np.column_stack([x, y])).vertices
 
         ascending = True if x[0] < x[1] else False
@@ -114,7 +120,11 @@ def sd_baseline_correction(
     if not bounds:
         filtered_df = df
     else:
-        filtered_df = df[(df.iloc[:, 0] > min(bounds)) & (df.iloc[:, 0] < max(bounds))]
+        filtered_df = df[
+            # (df.iloc[:, 0] > min(bounds)) & (df.iloc[:, 0] < max(bounds)) # original
+            (df.iloc[:, 0] >= min(bounds))
+            & (df.iloc[:, 0] <= max(bounds))  # bk mod 2/17/2022
+        ]
     if len(filtered_df) == 0:
         raise ValueError(
             "Bounds or frequency column definition returned an " "empty frequeny range"
@@ -157,7 +167,7 @@ def sd_baseline_correction(
     elif method == "complex":
         corrected_spectra = preprocessed_df
 
-    elif method == "LS":
+    elif method == "R-M Scattering":
         corrected_spectra = preprocessed_df
 
     else:
@@ -211,7 +221,6 @@ def lengthen_baseline(x_original, y_original, base_short):
 
 
 def apply_als_baseline_to_df(df, asym_baseline_left_x, lam_interval, niter=100):
-
     x_val = np.asarray(df.iloc[:, 0])
 
     df_left_x_trunc = df_trunc(df, float(asym_baseline_left_x), x_val[-1])
@@ -219,8 +228,9 @@ def apply_als_baseline_to_df(df, asym_baseline_left_x, lam_interval, niter=100):
     # Create a copy of the df, which will have y-values overwritten with fitted baselines
     df_fitted_baseline = df.copy()
 
-    for i in range(len(df.columns) - 1):
+    df_cor = df.copy()
 
+    for i in range(len(df.columns) - 1):
         y_val_trunc = np.asarray(df_left_x_trunc.iloc[:, (i + 1)])
         fitted_baseline_trunc = baseline_als(y_val_trunc, lam_interval, niter=100)
 
@@ -228,13 +238,13 @@ def apply_als_baseline_to_df(df, asym_baseline_left_x, lam_interval, niter=100):
 
         fitted_baseline = lengthen_baseline(x_val, y_val, fitted_baseline_trunc)
 
-        # Overwrite df with baseline-subtracted y data
-        df.iloc[:, (i + 1)] = y_val - fitted_baseline
+        # Corrected df with baseline-subtracted y data
+        df_cor.iloc[:, (i + 1)] = y_val - fitted_baseline
 
         # Write fitted baseline to df_fitted_baseline
         df_fitted_baseline.iloc[:, (i + 1)] = fitted_baseline
 
-    return df, df_fitted_baseline
+    return df_cor, df_fitted_baseline
 
 
 """
@@ -249,11 +259,15 @@ origin of the blue of the sky. https://doi.org/10.1080/14786449908621276
 
 
 def ls_uvvis_fun(x, a, b):
-    return b / x ** 4 + a
+    return b / x**4 + a
+
+
+def ls_leach_scheraga_with_bl_drift_fun(x, *params):
+    b, n, a = params
+    return b * x ** (-n) + a
 
 
 def apply_light_scattering_correction_to_df(df, ref_lambda):
-
     # Create a copy of the df, which will have y-values overwritten with fitted baselines
     df_fitted_ls_baseline = df.copy()
 
@@ -272,16 +286,26 @@ def apply_light_scattering_correction_to_df(df, ref_lambda):
         """
 
         x, y = df.iloc[idx:, 0].values, df.iloc[idx:, (i + 1)].values
+
+        """ Initial parameter guess and bounds"""
+        p0 = [1e6, 2, 0]
+        bounds = ([0, 1, -10], [1.0e12, 4, 10])
+
         # curve fit and return the optimized parameters (popt)
-        popt, _ = curve_fit(ls_uvvis_fun, x, y)
+        popt, _ = curve_fit(
+            f=ls_leach_scheraga_with_bl_drift_fun,
+            xdata=x,
+            ydata=y,
+            p0=p0,
+            bounds=bounds,
+        )
         # extract the a and b params from popt
-        a, b = popt
+        b, n, a = popt
 
         b_params[df.columns[i + 1]] = b
 
         # create the fitted baseline
-        y_fit = ls_uvvis_fun(df.iloc[:, 0], a, b)
-        # print(df.loc[idx:, 'Wavelength (nm)'].values, df.iloc[idx:, (i+1)].values, np.asarray(y_fit))
+        y_fit = ls_leach_scheraga_with_bl_drift_fun(df.iloc[:, 0], b, n, a)
 
         # Overwrite df with baseline-subtracted y data
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].values - np.asarray(y_fit)

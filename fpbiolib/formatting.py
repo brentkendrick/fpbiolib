@@ -31,7 +31,7 @@ def generate_table(dataframe, max_rows=10):
 
 def dec_notation(num, sci_note_upper):
     num_order_power = math.floor(math.log10(num))
-    num_order = 10 ** num_order_power
+    num_order = 10**num_order_power
     dec = str(int(math.log10(sci_note_upper) - math.log10(num_order)))
     return f"{{:.{dec}f}}".format(num)
 
@@ -47,3 +47,18 @@ def slider_num_formatter(
         return sci_notation(num, sci_sig_figs)
     else:
         return dec_notation(num, sci_note_upper).rstrip("0").rstrip(".")
+
+
+def process_str_list(range_limits: str):
+    """Some range limits are stored as a formatted string
+    for user readability in the csv file.  Process it
+    to create a normal python list with floats.
+    """
+    if not range_limits:
+        return None
+
+    bad_chars = "]['"
+    for c in bad_chars:
+        range_limits = range_limits.replace(c, "")
+    range_limits = range_limits.split(",")
+    return [float(x) for x in range_limits]

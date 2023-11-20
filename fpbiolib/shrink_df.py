@@ -21,7 +21,9 @@ def x_reduced(x_r):
     new_x_end = (
         math.floor(x_r[-1] * 100) / 100
     )  # mult then div by 100 to get sig figs we want
-    return np.arange(new_x_start, new_x_end, data_spacing)  # new x-data spacing/range
+    return np.arange(
+        new_x_start, new_x_end, data_spacing
+    )  # new x-data spacing/range
 
 
 def df_reduced(df_r_in):

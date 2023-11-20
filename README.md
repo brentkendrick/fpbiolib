@@ -16,6 +16,74 @@ pip install -I git+https://github.com/brentkendrick/fpbiolib
 Currently fpbiolib is not open source, and must be installed from source or a private
 codeartifact repository.
 
+## Mac Installation - I've had the most success with PYENV on the Mac Apple Silicon
+
+To ensure psycopg installs on MAC or Linux, first ensure postgres and libpq is installed
+on the local host, and included in PATH
+https://stackoverflow.com/questions/33866695/error-installing-psycopg2-on-macos-10-9-5
+
+using the official python.org installers has led to some package
+incompatibilities which haven't arisen when using pyenv for python
+version management.
+
+Update pyenv frequently
+
+```
+brew update && brew upgrade pyenv
+```
+
+Check installed python versions
+
+```
+pyenv versions
+```
+
+Find all available python versions
+
+```
+pyenv install --list
+```
+
+Install specific python version
+
+```
+pyenv install 3.11.4
+```
+
+Set local directory and subdirectories to use specific python version
+
+```
+pyenv local 3.11.4
+```
+
+Create virtual environment and activate it
+
+```
+python -m venv env311
+source ./env311/bin/activate
+```
+
+Install setuptools
+
+```
+pip install -U pip setuptools wheel
+```
+
+Attempt to install all packages using requirements.txt
+
+```
+pip install -r requirements.txt
+```
+
+Some may fail, which can often be overcome by trying a different package version
+(some get updated to the new arm architecture)
+
+After successfull install, re-try installing the entire requirements.txt file again, it should work.
+
+```
+pip install -r requirements.txt
+```
+
 ### From Source
 
 Clone or download the repo and use setuptools to install the package locally. For

@@ -1,10 +1,32 @@
-from plotly.graph_objs import Layout
-import plotly.io as pio
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import math
+
 import numpy as np
 import pandas as pd
-import math
+import plotly.graph_objects as go
+import plotly.io as pio
+from plotly.graph_objs import Layout
+from plotly.subplots import make_subplots
+
+# import symbol
+
+MINOR_TICKS = {
+    "None": None,
+    "one_tick": dict(
+        ticklen=5,
+        tickmode="auto",
+        nticks=3,
+    ),
+    "four_ticks": dict(
+        ticklen=5,
+        tickmode="auto",
+        nticks=5,
+    ),
+    "nine_ticks": dict(
+        ticklen=5,
+        tickmode="auto",
+        nticks=10,
+    ),
+}
 
 pltcolors = [
     "#1f77b4",
@@ -67,7 +89,309 @@ pltcolors = [
     "#7f7f7f",
     "#bcbd22",
     "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
 ]
+
+# pltcolors_orig = pltcolors.copy()
 
 primary_layout = go.Layout(
     # width = 1000,
@@ -99,7 +423,13 @@ primary_layout = go.Layout(
         tickwidth=2,
         ticklen=10,
     ),
-    legend=dict(traceorder="reversed", yanchor="top", y=0.99, xanchor="left", x=0.01),
+    legend=dict(
+        # traceorder="reversed",
+        yanchor="top",
+        y=0.99,
+        xanchor="left",
+        x=0.01,
+    ),
     modebar=dict(
         orientation="h",
         bgcolor="white",
@@ -110,41 +440,87 @@ primary_layout = go.Layout(
 )
 
 
+
+def dec_notation(sci_note_upper):
+    num_order_power = math.floor(math.log10(num))
+    num_order = 10**num_order_power
+    dec = str(int(math.log10(sci_note_upper) - math.log10(num_order)))
+    return ".4f"
+".2e"
+
+def sci_notation(num, sig_figs):
+    return f"{{:.{sig_figs}e}}".format(num)
+
+
+def tick_label_formatter(
+    num, sci_sig_figs=3, sci_note_upper=1000000, sci_note_lower=0.01
+):
+    print("\nnum: ", num)
+    if num >= sci_note_upper or num < sci_note_lower:
+        return ".3e"
+    else:
+        return ".6"
+
+
 def primary_graph(
     df,
-    offint=0,
+    reference_trace,
+    stack_value=0,
     zoom_level=1.0,
-    linewidth=1,
-    indexes=[],
+    pk_label_indexes=[],
     pk_labels=[],
     pk_labeling=False,
-    hide_TIC=False,
+    hide_reference_trace=False,
     y_label="Abs",
     x_label="RT (min)",
     reverse=False,
-    selected_pk_label_trace="default",
+    pk_label_sel_trace="default",
     legend_position="left",
+    trace_colors=[],
+    trace_dash=[],
+    trace_width=[],
+    current_anno=None,
+    graph_font="Arial",
+    x_axis_ticks="None",
+    y_axis_ticks="None",
+    pk_label_arrow=True,
+    pk_label_angle=0,
+    pk_label_line_length=35,
 ):
 
-    # print("INSIDE PRIMARY GRAPH")
+    if trace_dash is None or len(trace_dash) != len(df.columns[1:]):
+        trace_dash = []
+        for i, _ in enumerate(df.columns[1:]):
+            trace_dash.append("solid")
 
-    max_y = 1.10 * df[df.columns[1:]].max(axis=1).max()
-    min_y = 1.10 * df[df.columns[1:]].min(axis=1).min()
-    offset = 0
-    offint = 0.001 * offint * (max_y - min_y)  # *(len(df.columns)-2)
+    if trace_width is None or len(trace_width) != len(df.columns[1:]):
+        trace_width = []
+        for i, _ in enumerate(df.columns[1:]):
+            trace_width.append(1.25)
+
+    trace_colors_default = pltcolors.copy()
+    if trace_colors is not None and "Custom" not in trace_colors:
+        for i, val in enumerate(trace_colors):
+            if val is not None:
+                trace_colors_default[i] = trace_colors[i]
+
+    # print("\n\n INSIDE CUSTOM PLOT")
+    # print("\n\n trace_colors:", trace_colors)
+    # print("\n trace_colors_default:", trace_colors_default)
 
     fig = go.Figure(layout=primary_layout)
 
     fig.update_layout(
         margin=dict(l=0, r=50, t=30, b=50),
-        font_family="Arial",
+        font_family=graph_font,
         font_color="black",
         font_size=16,
-        title_font_family="Arial",
+        title_font_family=graph_font,
         title_font_color="black",
         title_font_size=16,
         legend_title_font_color="black",
         legend_title_font_size=16,
+        # uirevision="dash",
     )
 
     if legend_position == "left":
@@ -153,32 +529,39 @@ def primary_graph(
         fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99))
 
     if reverse:
-        fig.update_layout(
-            xaxis=dict(tickmode="auto", tickangle=0, autorange="reversed")
-        )
+        # TODO: figure out how to persist uirevision when autorange="reversed"
+        fig.update_layout(xaxis=dict(autorange="reversed"))
     else:
-        fig.update_layout(xaxis=dict(tickmode="auto", tickangle=0))
+        fig.update_layout(uirevision="persist")
 
-    # Option to hide TIC trace for combined TIC/UV plots
-    if hide_TIC:  # assumes TIC is first trace
-        offset = 0
-        for i in range(len(df.columns) - 2):
+    # Option to hide a reference trace (e.g. TIC trace for combined TIC/UV plots)
+    trace_idx = [(i + 1) for i in range(len(df.columns) - 1)]
+
+    if hide_reference_trace:
+        offset = stack_value * (len(trace_idx) - 1)
+        ref_idx = df.columns.get_loc(reference_trace)
+        del trace_idx[ref_idx - 1]
+        for col_idx in trace_idx:
 
             fig.add_trace(
                 go.Scatter(
                     x=df.iloc[:, 0],
-                    y=df.iloc[:, (i + 2)] + offset,
+                    y=df.iloc[:, col_idx] + offset,
                     mode="lines",
                     line_shape="spline",
-                    name=df.columns[(i + 2)],
-                    line=dict(color=pltcolors[i], width=linewidth),
+                    name=df.columns[(col_idx)],
+                    line=dict(
+                        color=trace_colors_default[col_idx - 1],
+                        width=trace_width[col_idx - 1],
+                        dash=trace_dash[col_idx - 1],
+                    ),
+                    # uid="testTrace",
                 )
             )
-
-            offset += offint
+            offset -= stack_value
 
     else:
-        offset = 0
+        offset = stack_value * (len(trace_idx) - 1)
         for i in range(len(df.columns) - 1):
 
             fig.add_trace(
@@ -188,45 +571,44 @@ def primary_graph(
                     mode="lines",
                     line_shape="spline",
                     name=df.columns[(i + 1)],
-                    line=dict(color=pltcolors[i], width=linewidth),
+                    line=dict(
+                        color=trace_colors_default[i],
+                        width=trace_width[i],
+                        dash=trace_dash[i],
+                    ),
                 )
             )
 
-            offset += offint
+            offset -= stack_value
 
+    layout_data = {}
     if pk_labeling:
-        # For peak labeling find top y value (may need work?)
-        if selected_pk_label_trace == "default":
-            top_y_val = np.asarray(df.iloc[:, -1])
-        else:
-            top_y_val = np.asarray(df[selected_pk_label_trace])
-        x_val = np.asarray(
-            df.iloc[:, 0]
-        )  # numpy array creation is faster than to_list creation
-        for i in range(len(x_val[indexes].tolist())):
-            fig.add_annotation(
-                dict(
-                    x=x_val[indexes][i],
-                    y=top_y_val[indexes][i] + offset - offint,
-                    text=pk_labels[i],
-                )
-            )
 
-        fig.update_annotations(
-            dict(
-                xref="x",
-                yref="y",
-                showarrow=True,
-                arrowhead=2,
-                ax=0,
-                ay=-35,
-                clicktoshow="onoff",
-                standoff=2,
-                font=dict(color="black", size=14),
-                textangle=0,
-                xanchor="center",
-            )
+        all_annotations = create_annotations(
+            df,
+            pk_labels,
+            pk_label_sel_trace,
+            pk_label_indexes,
+            stack_value,
+            pk_label_arrow=pk_label_arrow,
+            pk_label_angle=pk_label_angle,
+            pk_label_line_length=pk_label_line_length,
         )
+
+        for anno in all_annotations:
+            fig.add_annotation(anno)
+
+        # print("figure layout annotations: \n: ", fig["layout"]["annotations"])
+        if current_anno:
+            # print("\ncurrent_anno: ", current_anno)
+            for index, annotations in enumerate(fig["layout"]["annotations"]):
+                update_annos = ["ax", "ay", "x", "y", "text", "arrowhead", "textangle"]
+                for anno in update_annos:
+                    if current_anno.get(f"annotations[{index}].{anno}"):
+                        fig["layout"]["annotations"][index][anno] = current_anno.get(
+                            f"annotations[{index}].{anno}"
+                        )
+                    layout_data[f"annotations[{index}].{anno}"] = annotations[anno]
 
     fig.update_xaxes(
         showline=True,
@@ -235,8 +617,16 @@ def primary_graph(
         ticks="outside",
         tickwidth=1,
         tickcolor="black",
-        ticklen=5,
+        ticklen=8,
+        # tickformat=tick_label_formatter(df.iloc[-1,0]),
+        tickformat=".6", # anything above 1e6 gets formatted as sci notation
         mirror=True,
+        minor=MINOR_TICKS[x_axis_ticks],
+        ticklabelstep=2,
+        tickmode="auto",
+        tickangle=0,
+        nticks=20,
+        # rangemode="tozero"
     )
     fig.update_yaxes(
         showline=True,
@@ -245,21 +635,93 @@ def primary_graph(
         ticks="outside",
         tickwidth=1,
         tickcolor="black",
-        ticklen=5,
+        ticklen=8,
+        tickformat=".6", # anything above 1e6 gets formatted as sci notation
         mirror=True,
+        minor=MINOR_TICKS[y_axis_ticks],
+        ticklabelstep=2,
+        tickmode="auto",
+        tickangle=0,
+        nticks=15,
     )
+
+    max_y = 1.10 * df[df.columns[1:]].max(axis=1).max()
+    min_y = 1.10 * df[df.columns[1:]].min(axis=1).min()
+
     fig.update_layout(
-        yaxis=dict(range=[min_y, max_y / zoom_level], title_text=y_label,),
-        xaxis=dict(title_text=x_label,),
+        yaxis=dict(
+            range=[min_y, max_y / zoom_level],
+            title_text=y_label,
+        ),
+        xaxis=dict(
+            title_text=x_label,
+        ),
     )
     # Override default behavior to hide legend if only 1 trace plotted
     fig["data"][0]["showlegend"] = True
-    if hide_TIC:
-        fig["data"][0]["name"] = df.columns[2]
+    fig["data"][0]["name"] = df.columns[trace_idx[0]]
+
+    # print("fig: \n", fig)
+    # print("\nlayout_data: ", layout_data)
+    return fig, layout_data
+
+
+def create_annotations(
+    df,
+    pk_labels,
+    pk_label_sel_trace,
+    pk_label_indexes,
+    stack_value,
+    pk_label_arrow=True,
+    pk_label_angle=0,
+    pk_label_line_length=35,
+):
+    """Creates plotly figure annotations from a peak label list.
+    A dataframe is passed in so that x and y values for the
+    label positions can be determined based on pre-determined index
+    values.  The stack value allows a vertical offset based on
+    the Stack Traces slider input.
+    """
+    if pk_label_arrow == True:
+        pk_label_arrow = 2
 
     else:
-        fig["data"][0]["name"] = df.columns[1]
-    return fig
+        pk_label_arrow = 0
+
+    # For peak labeling find top y value
+    if pk_label_sel_trace == "default":
+        top_y_val = np.asarray(df.iloc[:, -1])
+    else:
+        top_y_val = np.asarray(df[pk_label_sel_trace])
+
+    x_val = np.asarray(df.iloc[:, 0])
+    trace_idx = [(i + 1) for i in range(len(df.columns) - 1)]
+    sel_trace_col_idx = df.columns.get_loc(pk_label_sel_trace)
+    offset = stack_value * (len(trace_idx) - (sel_trace_col_idx))
+
+    all_annotations = []
+    for i, pk_idx in enumerate(pk_label_indexes):
+        anno = dict(
+            x=x_val[pk_idx],
+            y=top_y_val[pk_idx] + offset,
+            text=pk_labels[i],
+            xref="x",
+            yref="y",
+            showarrow=True,
+            # arrowhead=2,
+            arrowhead=pk_label_arrow,
+            ax=0,
+            ay=-pk_label_line_length,
+            clicktoshow="onoff",
+            standoff=2,
+            font=dict(color="black", size=14),
+            # textangle=0,
+            textangle=pk_label_angle,
+            xanchor="center",
+        )
+        all_annotations.append(anno)
+
+    return all_annotations
 
 
 def baseline_check_graph(x_val, y_val, base, zoom_level=1):
@@ -288,63 +750,60 @@ def baseline_check_graph(x_val, y_val, base, zoom_level=1):
     return fig
 
 
-def peak_ctr_check_graph3b(
-    df_cen_chk, selected_trace, linewidth, indexes, labels=False, pk_labels=[]
-):
-
-    indexes = indexes
-    # Call graph object figure initialization
-    layout = go.Layout()
-    fig = go.Figure(layout=layout)
-    #         idx_len = len(x_val)
-    y_active = np.asarray(df_cen_chk[selected_trace].copy())
-    x_active = np.asarray(df_cen_chk.iloc[:, 0].copy())
+def create_pk_align_fig(df_cen_chk, all_ctrs=[]):
+    linewidth = 1.2
+    fig = go.Figure(layout=primary_layout)
     # Add traces
     for i in range(len(df_cen_chk.columns) - 1):
 
         fig.add_trace(
             go.Scatter(
                 x=df_cen_chk.iloc[:, 0],
-                y=df_cen_chk.iloc[:, (i + 1)],
+                y=df_cen_chk.iloc[:, (i + 1)]
+                + i * 0.03 * df_cen_chk.iloc[:, (i + 1)].max(),
                 mode="lines",
                 name=df_cen_chk.columns[(i + 1)],
                 line=dict(color=pltcolors[i], width=linewidth),
             )
         )
 
-    for i in range(len(x_active[indexes].tolist())):
-        if labels:
-            fig.add_annotation(
-                dict(x=x_active[indexes][i], y=y_active[indexes][i], text=pk_labels[i],)
+        fig.add_trace(
+            go.Scatter(
+                x=df_cen_chk.iloc[all_ctrs[i], 0],
+                y=df_cen_chk.iloc[all_ctrs[i], (i + 1)]
+                + i * 0.03 * df_cen_chk.iloc[all_ctrs[i], (i + 1)].max()
+                + 0.1 * df_cen_chk.iloc[all_ctrs[i], (i + 1)].max(),
+                marker=dict(
+                    size=14,
+                    color=pltcolors[i],
+                    symbol="diamond-tall-dot",
+                    line=dict(width=1, color="DarkSlateGrey"),
+                ),
+                mode="markers",
+                name=None,  # f"{df_cen_chk.columns[(i + 1)]} pk max",
+                showlegend=False,
             )
-            i += 1
-        else:
-            fig.add_annotation(
-                dict(
-                    x=x_active[indexes][i],
-                    y=y_active[indexes][i],
-                    text="{:.2f}".format((round(x_active[indexes][i], 2))),
-                )
-            )
-            i += 1
-    fig.update_annotations(
-        dict(
-            xref="x",
-            yref="y",
-            showarrow=True,
-            # captureevents=True,
-            # plotly_clickannotation=True,
-            arrowhead=2,
-            ax=0,
-            ay=-35,
-            clicktoshow="onoff",
-            standoff=2,
-            font=dict(color="black", size=10),
-            textangle=-90,
-            xanchor="left",
         )
-    )
-    # pio.show(fig)
+    # print("\nReturning peak alignment figure\n")
+    return fig
+
+
+def create_cow_pk_align_fig(df):
+    linewidth = 1.2
+    fig = go.Figure(layout=primary_layout)
+    # Add traces
+    for i in range(len(df.columns) - 1):
+
+        fig.add_trace(
+            go.Scatter(
+                x=df.iloc[:, 0],
+                y=df.iloc[:, (i + 1)],  # + i * 0.03 * df.iloc[:, (i + 1)].max(),
+                mode="lines",
+                name=df.columns[(i + 1)],
+                line=dict(color=pltcolors[i], width=linewidth),
+            )
+        )
+
     return fig
 
 
@@ -378,7 +837,7 @@ def axis_ticks(a, zoom, dfmax, y_ax):
     tick_hi = roundup(a_max, 10 ** (int(delta_mag)))
 
     dif_norm = (
-        a_max / 10 ** delta_mag - a_min / 10 ** delta_mag
+        a_max / 10**delta_mag - a_min / 10**delta_mag
     )  # create normalized difference parameter, i.e. if a_max is 600, and delta_mag is 2 it gets normalized to 6
 
     if dif_norm >= 5:
@@ -502,7 +961,9 @@ def Simple_plot(df):
     ydata = df.iloc[:, 1]
     # Add traces
     fig.add_trace(
-        go.Scatter(x=xdata, y=ydata, mode="lines", name="original"), row=1, col=1
+        go.Scatter(x=xdata, y=ydata, mode="lines", name="original"),
+        row=1,
+        col=1,
     )
 
     fig["layout"].update(basic_layout)
@@ -578,10 +1039,14 @@ def Gaussian_plots(df, col, peak_list, linewidth=1.2, reverse=False):
     y_fit = sum(peak_list)
     # Add traces
     fig.add_trace(
-        go.Scatter(x=xdata, y=df[col], mode="lines", name="original"), row=1, col=1
+        go.Scatter(x=xdata, y=df[col], mode="lines", name="original"),
+        row=1,
+        col=1,
     )
     fig.add_trace(
-        go.Scatter(x=xdata, y=y_fit, mode="lines", name="Model fit"), row=1, col=1
+        go.Scatter(x=xdata, y=y_fit, mode="lines", name="Model fit"),
+        row=1,
+        col=1,
     )
     for i in range(len(peak_list)):
         fig.add_trace(
@@ -598,7 +1063,9 @@ def Gaussian_plots(df, col, peak_list, linewidth=1.2, reverse=False):
     # Add subplot with residuals
     resid = df[col] - y_fit
     fig.add_trace(
-        go.Scatter(x=xdata, y=resid, mode="lines", name="residuals"), row=2, col=1
+        go.Scatter(x=xdata, y=resid, mode="lines", name="residuals"),
+        row=2,
+        col=1,
     )
     fig["layout"].update(layout)
 

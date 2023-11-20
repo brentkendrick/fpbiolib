@@ -11,19 +11,8 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
-    "pandas==1.3.5",
-    "plotly==5.5.0",
-    "dash==2.0.0",
-    "dash-bootstrap-components==1.0.2",
-    "redis==4.1.1",
-    "Flask==2.0.0",
-    "werkzeug==2.0.0",
-    "peakutils==1.3.3",
-    "openpyxl==3.0.9",
-    "scipy==1.7.3",
-    "urllib3==1.26.7",
-    "Sphinx==4.4.0",
-    "sphinx-rtd-theme==1.0.0"
+    "pandas>=2.0",
+    "scipy>=1.7.3",
 ]
 
 setup(

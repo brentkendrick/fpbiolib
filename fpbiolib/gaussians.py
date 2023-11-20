@@ -3,7 +3,9 @@ import numpy as np
 import pandas as pd
 import math
 from scipy import optimize
-
+from .df_transforms import idx_val
+import math
+from .array_transforms import y_in_x_range, y_fm_x_value
 
 def guess_heights(df, col, center_list, gain=0.95):
     """Determines guesses for the heights based on measured data.
@@ -37,11 +39,14 @@ def guess_heights(df, col, center_list, gain=0.95):
     freq_map = {}
     for i in df.iloc[:, 0]:
         j = math.floor(i)
-        freq_map[j] = float(df[col].get(df.iloc[:, 0] == i))
+        mask = df.iloc[:, 0] == i
+        freq_map[j] = float(df.loc[mask, col].values[0])
     for i in center_list:
         height = freq_map[i]
         heights.append(gain * height)
     return heights
+
+
 
 
 def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=dict()):
@@ -69,6 +74,7 @@ def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=di
     args = [fun, np.array(guess)]
     params["args"] = (data[:, 0], data[:, 1])
     params["bounds"] = (np.array(lb), np.array(ub))
+    print("params: ", params)
     res = optimize.least_squares(*args, **params)
 
     areas = list()
@@ -87,30 +93,46 @@ def gaussian(x, height, center, width):
 
 def gaussian_sum(x, *args):
     """Returns the sum of the gaussian function inputs"""
-    return sum(gaussian_list(x, *args))
+    return sum(all_gaussians(x, *args))
 
 
-def gaussian_list(x, *args):
+def all_gaussians(x, *args):
     """Returns a list containing all gaussian component peaks passed in by *args"""
     if len(args) % 3 != 0:
         raise ValueError("Args must divisible by 3")
-    gausslist = []
+    gaussians = []
     count = 0
     for i in range(int(len(args) / 3)):
         gausstemp = gaussian(x, args[count], args[count + 1], args[count + 2])
-        gausslist.append(gausstemp)
+        gaussians.append(gausstemp)
         count += 3
-
-    gausslist = [
-        np.where(gausslist[i] < 1.0e-30, 0.0, gausslist[i])
-        for i, _ in enumerate(gausslist)
-    ]
 
     # The gaussian peaks resulting from the curve fit often result in values
     # that are insanely small (e.g. < 1e-30) and should just be converted to zero
+    gaussians = [
+        np.where(gaussians[i] < 1.0e-30, 0.0, gaussians[i])
+        for i, _ in enumerate(gaussians)
+    ]
 
-    return gausslist
+    return gaussians
 
+
+def gaussian_peaks_p0_and_bounds(x, y, peak_ctrs: list, peak_width: float, peak_x_uncertainty: float, gain=1.0):
+    
+    lb = []
+    ub = []
+    p0 = []
+
+    # Make 1-D array for optimization func definition above
+    for ctr in peak_ctrs:
+        low_x = ctr - peak_x_uncertainty
+        high_x = ctr + peak_x_uncertainty
+        lb.extend([0, low_x, 0])
+        ubh = max(y_in_x_range(x, y, low_x, high_x))*1.3
+        ub.extend([ubh, high_x, peak_width])
+        p0.extend([y_fm_x_value(x, y, ctr) * gain, ctr, peak_width])
+        
+    return p0, np.array(lb), np.array(ub)
 
 def gaussian_integral(height, width):
     """Returns the integral of a gaussian curve with the given height, width
@@ -127,3 +149,27 @@ def gaussians_to_df(df, gaussian_list_data, fitted_trace):
     gaussian_df.insert(1, fitted_trace, df[fitted_trace])
     gaussian_df.insert(2, "Model Fit", sum(gaussian_list_data))
     return gaussian_df
+
+
+
+# def y_in_x_range(df, sel_trace, x_range):
+#     """Determines guesses for the heights based on measured data.
+
+#     Function creates list of initial peak heights for curve-fitting. A
+#     default gain of 1.0 seems to work best for most spectra, but can be changed to
+#     improve convergence.
+
+#     Parameters
+#     ----------
+#     df : Dataframe
+#         Dataframe containing the measured absorbance data
+
+#     sel_trace : string or index
+#         Column name for the trace data being fit. Accepts either index
+#         or string convention.
+
+#     x_range : list
+#         beginning and ending (inclusive) 2-D array
+
+#     """
+#     return df.loc[idx_val(df, x_range[0]):idx_val(df, x_range[1]), sel_trace]

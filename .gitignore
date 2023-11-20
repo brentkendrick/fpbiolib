@@ -1,3 +1,44 @@
+*.py[co]
+*.qm
+*.sqlite
+.directory
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+var
+sdist
+develop-eggs
+.installed.cfg
+.cache/
+.eggs/
+venv/
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+#Translations
+*.mo
+
+#Vim swap files
+*.swp
+
+#Extra Programs
+/data/*
+/tracelib.egg-info/*
+/build/*
+/dist/*
+
+*.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -12,6 +53,10 @@ __pycache__/
 
 # VS Code
 .vscode
+
+.DS_Store
+.DS_Store?
+**/.DS_Store
 
 # Distribution / packaging
 .Python
@@ -119,6 +164,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env_x86_64
+env*
+env*
 
 # Spyder project settings
 .spyderproject
@@ -143,3 +191,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# NET and cs stuff
+.NETCoreApp*
+StringLibrary.*

@@ -440,13 +440,15 @@ primary_layout = go.Layout(
 )
 
 
-
 def dec_notation(sci_note_upper):
     num_order_power = math.floor(math.log10(num))
     num_order = 10**num_order_power
     dec = str(int(math.log10(sci_note_upper) - math.log10(num_order)))
     return ".4f"
+
+
 ".2e"
+
 
 def sci_notation(num, sig_figs):
     return f"{{:.{sig_figs}e}}".format(num)
@@ -524,9 +526,13 @@ def primary_graph(
     )
 
     if legend_position == "left":
-        fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01))
+        fig.update_layout(
+            legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+        )
     else:
-        fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99))
+        fig.update_layout(
+            legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99)
+        )
 
     if reverse:
         # TODO: figure out how to persist uirevision when autorange="reversed"
@@ -602,13 +608,23 @@ def primary_graph(
         if current_anno:
             # print("\ncurrent_anno: ", current_anno)
             for index, annotations in enumerate(fig["layout"]["annotations"]):
-                update_annos = ["ax", "ay", "x", "y", "text", "arrowhead", "textangle"]
+                update_annos = [
+                    "ax",
+                    "ay",
+                    "x",
+                    "y",
+                    "text",
+                    "arrowhead",
+                    "textangle",
+                ]
                 for anno in update_annos:
                     if current_anno.get(f"annotations[{index}].{anno}"):
-                        fig["layout"]["annotations"][index][anno] = current_anno.get(
-                            f"annotations[{index}].{anno}"
-                        )
-                    layout_data[f"annotations[{index}].{anno}"] = annotations[anno]
+                        fig["layout"]["annotations"][index][
+                            anno
+                        ] = current_anno.get(f"annotations[{index}].{anno}")
+                    layout_data[f"annotations[{index}].{anno}"] = annotations[
+                        anno
+                    ]
 
     fig.update_xaxes(
         showline=True,
@@ -619,7 +635,7 @@ def primary_graph(
         tickcolor="black",
         ticklen=8,
         # tickformat=tick_label_formatter(df.iloc[-1,0]),
-        tickformat=".6", # anything above 1e6 gets formatted as sci notation
+        tickformat=".6",  # anything above 1e6 gets formatted as sci notation
         mirror=True,
         minor=MINOR_TICKS[x_axis_ticks],
         ticklabelstep=2,
@@ -636,7 +652,7 @@ def primary_graph(
         tickwidth=1,
         tickcolor="black",
         ticklen=8,
-        tickformat=".6", # anything above 1e6 gets formatted as sci notation
+        tickformat=".6",  # anything above 1e6 gets formatted as sci notation
         mirror=True,
         minor=MINOR_TICKS[y_axis_ticks],
         ticklabelstep=2,
@@ -731,10 +747,14 @@ def baseline_check_graph(x_val, y_val, base, zoom_level=1):
 
     # Add traces
     fig.add_trace(
-        go.Scatter(x=x_val, y=(y_val - base), mode="lines", name="baseline corrected")
+        go.Scatter(
+            x=x_val, y=(y_val - base), mode="lines", name="baseline corrected"
+        )
     )
     fig.add_trace(
-        go.Scatter(x=x_val, y=y_val - base.min(), mode="lines", name="original")
+        go.Scatter(
+            x=x_val, y=y_val - base.min(), mode="lines", name="original"
+        )
     )
     fig.add_trace(
         go.Scatter(x=x_val, y=base - base.min(), mode="lines", name="baseline")
@@ -797,7 +817,9 @@ def create_cow_pk_align_fig(df):
         fig.add_trace(
             go.Scatter(
                 x=df.iloc[:, 0],
-                y=df.iloc[:, (i + 1)],  # + i * 0.03 * df.iloc[:, (i + 1)].max(),
+                y=df.iloc[
+                    :, (i + 1)
+                ],  # + i * 0.03 * df.iloc[:, (i + 1)].max(),
                 mode="lines",
                 name=df.columns[(i + 1)],
                 line=dict(color=pltcolors[i], width=linewidth),
@@ -844,13 +866,17 @@ def axis_ticks(a, zoom, dfmax, y_ax):
         tick_spc_maj = 10 ** (int(delta_mag))
         tick_spc = tick_spc_maj / 5
         #         tick_vals_major = list(np.around((np.arange(tick_low, tick_hi+tick_spc*1, tick_spc_maj)), decimals = magnitude(a_max)-4))
-        tick_vals_major = list(np.arange(tick_low, tick_hi * zoom, tick_spc_maj))
+        tick_vals_major = list(
+            np.arange(tick_low, tick_hi * zoom, tick_spc_maj)
+        )
         tick_vals = list(np.arange(tick_low, tick_hi * zoom, tick_spc))
     else:
         tick_spc_maj = (10 ** (int(delta_mag))) / 2
         tick_spc = tick_spc_maj / 5
         #         tick_vals_major = list(np.around((np.arange(tick_low, tick_hi+tick_spc*1, tick_spc_maj)), decimals = magnitude(a_max)-4))
-        tick_vals_major = list(np.arange(tick_low, tick_hi * zoom, tick_spc_maj))
+        tick_vals_major = list(
+            np.arange(tick_low, tick_hi * zoom, tick_spc_maj)
+        )
         tick_vals = list(np.arange(tick_low, tick_hi * zoom, tick_spc * zoom))
 
     #     if y_ax:
@@ -887,7 +913,9 @@ def roundup(
     x, val
 ):  # x is value to be rounded, val is the placevalue, i.e. 100, 10, 1, 0.1, 0.01, etc. to be rounded to
     return (
-        x if x % val == 0 else round((x + val - x % val), -int(math.log10(val)))
+        x
+        if x % val == 0
+        else round((x + val - x % val), -int(math.log10(val)))
     )  # python has floating point issues, only soln seems to round again here.
 
 

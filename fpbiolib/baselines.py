@@ -127,7 +127,8 @@ def sd_baseline_correction(
         ]
     if len(filtered_df) == 0:
         raise ValueError(
-            "Bounds or frequency column definition returned an " "empty frequeny range"
+            "Bounds or frequency column definition returned an "
+            "empty frequeny range"
         )
 
     # determine which colums to apply corrections
@@ -171,12 +172,16 @@ def sd_baseline_correction(
         corrected_spectra = preprocessed_df
 
     else:
-        raise NameError("name {0} is not a supported baseline method" "".format(method))
+        raise NameError(
+            "name {0} is not a supported baseline method" "".format(method)
+        )
 
     # create the final dataframe with a clean index and return
     filtered_df.reset_index(drop=True, inplace=True)
     corrected_spectra.reset_index(drop=True, inplace=True)
-    return pd.concat([filtered_df.iloc[:, 0], corrected_spectra], axis=1, sort=False)
+    return pd.concat(
+        [filtered_df.iloc[:, 0], corrected_spectra], axis=1, sort=False
+    )
 
 
 def baseline_als(y, lam, niter=10):
@@ -220,7 +225,9 @@ def lengthen_baseline(x_original, y_original, base_short):
     return np.concatenate([lft_y_base_cor, base_short])
 
 
-def apply_als_baseline_to_df(df, asym_baseline_left_x, lam_interval, niter=100):
+def apply_als_baseline_to_df(
+    df, asym_baseline_left_x, lam_interval, niter=100
+):
     x_val = np.asarray(df.iloc[:, 0])
 
     df_left_x_trunc = df_trunc(df, float(asym_baseline_left_x), x_val[-1])
@@ -232,11 +239,15 @@ def apply_als_baseline_to_df(df, asym_baseline_left_x, lam_interval, niter=100):
 
     for i in range(len(df.columns) - 1):
         y_val_trunc = np.asarray(df_left_x_trunc.iloc[:, (i + 1)])
-        fitted_baseline_trunc = baseline_als(y_val_trunc, lam_interval, niter=100)
+        fitted_baseline_trunc = baseline_als(
+            y_val_trunc, lam_interval, niter=100
+        )
 
         y_val = np.asarray(df.iloc[:, (i + 1)])
 
-        fitted_baseline = lengthen_baseline(x_val, y_val, fitted_baseline_trunc)
+        fitted_baseline = lengthen_baseline(
+            x_val, y_val, fitted_baseline_trunc
+        )
 
         # Corrected df with baseline-subtracted y data
         df_cor.iloc[:, (i + 1)] = y_val - fitted_baseline

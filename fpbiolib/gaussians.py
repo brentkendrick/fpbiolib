@@ -7,6 +7,7 @@ from .df_transforms import idx_val
 import math
 from .array_transforms import y_in_x_range, y_fm_x_value
 
+
 def guess_heights(df, col, center_list, gain=0.95):
     """Determines guesses for the heights based on measured data.
 
@@ -47,9 +48,9 @@ def guess_heights(df, col, center_list, gain=0.95):
     return heights
 
 
-
-
-def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=dict()):
+def gaussian_least_squares(
+    df, col, peaks=yang_h20_2015, peak_width=5, params=dict()
+):
     if not col:
         col = df.columns[1]
 
@@ -65,7 +66,9 @@ def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=di
     guess = list()
 
     # Make 1-D array for optimization func definition above
-    for mean, bound, height in zip(peaks["means"], peaks["uncertainties"], heights):
+    for mean, bound, height in zip(
+        peaks["means"], peaks["uncertainties"], heights
+    ):
         lb.extend([0, bound[0], 0])
         ubh = np.inf if height <= 0 else height
         ub.extend([ubh, bound[1], peak_width * 1])
@@ -117,8 +120,15 @@ def all_gaussians(x, *args):
     return gaussians
 
 
-def gaussian_peaks_p0_and_bounds(x, y, peak_ctrs: list, peak_width: float, peak_x_uncertainty: float, gain=1.0):
-    
+def gaussian_peaks_p0_and_bounds(
+    x,
+    y,
+    peak_ctrs: list,
+    peak_width: float,
+    peak_x_uncertainty: float,
+    gain=1.0,
+):
+
     lb = []
     ub = []
     p0 = []
@@ -128,11 +138,12 @@ def gaussian_peaks_p0_and_bounds(x, y, peak_ctrs: list, peak_width: float, peak_
         low_x = ctr - peak_x_uncertainty
         high_x = ctr + peak_x_uncertainty
         lb.extend([0, low_x, 0])
-        ubh = max(y_in_x_range(x, y, low_x, high_x))*1.3
+        ubh = max(y_in_x_range(x, y, low_x, high_x)) * 1.3
         ub.extend([ubh, high_x, peak_width])
         p0.extend([y_fm_x_value(x, y, ctr) * gain, ctr, peak_width])
-        
+
     return p0, np.array(lb), np.array(ub)
+
 
 def gaussian_integral(height, width):
     """Returns the integral of a gaussian curve with the given height, width
@@ -142,14 +153,15 @@ def gaussian_integral(height, width):
 
 
 def gaussians_to_df(df, gaussian_list_data, fitted_trace):
-    tmp_col_names = [f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)]
+    tmp_col_names = [
+        f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)
+    ]
     gaussian_df = pd.DataFrame(gaussian_list_data).transpose()
     gaussian_df.columns = tmp_col_names
     gaussian_df.insert(0, df.columns[0], df.iloc[:, 0])
     gaussian_df.insert(1, fitted_trace, df[fitted_trace])
     gaussian_df.insert(2, "Model Fit", sum(gaussian_list_data))
     return gaussian_df
-
 
 
 # def y_in_x_range(df, sel_trace, x_range):

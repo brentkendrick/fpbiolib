@@ -44,7 +44,9 @@ def guess_heights(df, col, center_list, gain=0.95):
     return heights
 
 
-def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=dict()):
+def gaussian_least_squares(
+    df, col, peaks=yang_h20_2015, peak_width=5, params=dict()
+):
     if not col:
         col = df.columns[1]
 
@@ -60,7 +62,9 @@ def gaussian_least_squares(df, col, peaks=yang_h20_2015, peak_width=5, params=di
     guess = list()
 
     # Make 1-D array for optimization func definition above
-    for mean, bound, height in zip(peaks["means"], peaks["uncertainties"], heights):
+    for mean, bound, height in zip(
+        peaks["means"], peaks["uncertainties"], heights
+    ):
         lb.extend([0, bound[0], 0])
         ubh = np.inf if height <= 0 else height
         ub.extend([ubh, bound[1], peak_width * 1])
@@ -120,7 +124,9 @@ def gaussian_integral(height, width):
 
 
 def gaussians_to_df(df, gaussian_list_data, fitted_trace):
-    tmp_col_names = [f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)]
+    tmp_col_names = [
+        f"Gaussian {i+1}" for i, _ in enumerate(gaussian_list_data)
+    ]
     gaussian_df = pd.DataFrame(gaussian_list_data).transpose()
     gaussian_df.columns = tmp_col_names
     gaussian_df.insert(0, df.columns[0], df.iloc[:, 0])

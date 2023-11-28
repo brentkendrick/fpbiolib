@@ -70,7 +70,6 @@ def component_pks_sum(x_with_params: list, *flat_variable_params: list):
 def peak_area_pct(x, peaklist):
     pk_area = []
     for i in range(int(len(peaklist))):
-
         pk_area_tmp = np.trapz(
             peaklist[i], x
         )  # integrates individual fitted peak

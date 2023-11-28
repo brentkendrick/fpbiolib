@@ -489,7 +489,6 @@ def primary_graph(
     pk_label_angle=0,
     pk_label_line_length=35,
 ):
-
     if trace_dash is None or len(trace_dash) != len(df.columns[1:]):
         trace_dash = []
         for i, _ in enumerate(df.columns[1:]):
@@ -548,7 +547,6 @@ def primary_graph(
         ref_idx = df.columns.get_loc(reference_trace)
         del trace_idx[ref_idx - 1]
         for col_idx in trace_idx:
-
             fig.add_trace(
                 go.Scatter(
                     x=df.iloc[:, 0],
@@ -569,7 +567,6 @@ def primary_graph(
     else:
         offset = stack_value * (len(trace_idx) - 1)
         for i in range(len(df.columns) - 1):
-
             fig.add_trace(
                 go.Scatter(
                     x=df.iloc[:, 0],
@@ -589,7 +586,6 @@ def primary_graph(
 
     layout_data = {}
     if pk_labeling:
-
         all_annotations = create_annotations(
             df,
             pk_labels,
@@ -741,7 +737,6 @@ def create_annotations(
 
 
 def baseline_check_graph(x_val, y_val, base, zoom_level=1):
-
     # Call graph object figure initialization
     fig = go.Figure(layout=go.Layout())
 
@@ -775,7 +770,6 @@ def create_pk_align_fig(df_cen_chk, all_ctrs=[]):
     fig = go.Figure(layout=primary_layout)
     # Add traces
     for i in range(len(df_cen_chk.columns) - 1):
-
         fig.add_trace(
             go.Scatter(
                 x=df_cen_chk.iloc[:, 0],
@@ -813,7 +807,6 @@ def create_cow_pk_align_fig(df):
     fig = go.Figure(layout=primary_layout)
     # Add traces
     for i in range(len(df.columns) - 1):
-
         fig.add_trace(
             go.Scatter(
                 x=df.iloc[:, 0],
@@ -830,7 +823,6 @@ def create_cow_pk_align_fig(df):
 
 
 def axis_ticks(a, zoom, dfmax, y_ax):
-
     #     if zoom <= 1:
     #         zoom = 1
     #     elif zoom <= 3:
@@ -1028,7 +1020,6 @@ def Simple_plot(df):
 
 
 def Gaussian_plots(df, col, peak_list, linewidth=1.2, reverse=False):
-
     layout = go.Layout(
         # width = 1000,
         height=800,

@@ -26,15 +26,18 @@ def dec_notation(num, sci_note_upper):
     return f"{num:.{3}f}"
 
 
-def sci_notation(num, sig_figs, etype="e"):
+def sci_notation(num, sig_figs, e_notation=True, cap_e=False):
     """Return a numeric value as a string
-    formatted as either e notation or multiplied
-    exponent notation, e.g.
+    formatted as either e notation or scientific
+    notation, e.g.
      - e notation:  3.56e+06
-     - 3.56 × 10⁺⁰⁶
+     - E notation: 3.56E+06
+     - Scientific notation: 3.56 × 10⁺⁰⁶
     """
     sci_num = f"{num:.{sig_figs}e}"
-    if etype == "e":
+    if cap_e and e_notation:
+        sci_num = f"{num:.{sig_figs}E}"
+    if e_notation:
         return sci_num
     pattern = re.compile(r"(e)([+-]\d+)")
     matches = pattern.findall(sci_num)

@@ -27,7 +27,6 @@ def x_reduced(x_r):
 
 
 def df_reduced(df_r_in):
-
     # create an empty dict to hold new arrays, create dataframe once size is defined in dict array size
     d = {}
     col_list = df_r_in.columns

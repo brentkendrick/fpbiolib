@@ -128,7 +128,6 @@ def gaussian_peaks_p0_and_bounds(
     peak_x_uncertainty: float,
     gain=1.0,
 ):
-
     lb = []
     ub = []
     p0 = []

@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.1.2"  # updated sci_notation
+__version__ = "0.1.3"  # brought in more norbi_stripe functions
 
 
 from .rounders import (
@@ -8,5 +8,12 @@ from .rounders import (
     interval_range,
     round_down_nearest_order_mag,
     round_up_nearest_order_mag,
+    ten_to_the_x,
 )
-from .characters import get_super, to_sup, dec_notation, sci_notation
+from .formatting import (
+    get_super,
+    to_sup,
+    dec_notation,
+    sci_notation,
+    process_str_list,
+)

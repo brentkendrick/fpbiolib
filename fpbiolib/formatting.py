@@ -91,3 +91,18 @@ def to_sup(s):
     return "".join(
         sups.get(char, char) for char in s
     )  # lose the list comprehension
+
+
+def process_str_list(str_list: list) -> list:
+    """Some list characters are stored as strings
+    for user readability.  Process it
+    to create a normal python list with floats.
+    """
+    if not str_list:
+        return None
+
+    bad_chars = "]['"
+    for c in bad_chars:
+        str_list = str_list.replace(c, "")
+    str_list = str_list.split(",")
+    return [float(x) for x in str_list]

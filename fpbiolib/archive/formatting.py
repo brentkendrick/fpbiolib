@@ -57,7 +57,9 @@ def sci_notation(num, sig_figs):
 def slider_num_formatter(
     num, sci_sig_figs=3, sci_note_upper=10000, sci_note_lower=0.01
 ):
-    if num >= sci_note_upper or num < sci_note_lower:
+    if num == 0:
+        return "0"
+    elif num >= sci_note_upper or num < sci_note_lower:
         return sci_notation(num, sci_sig_figs)
     else:
         return dec_notation(num, sci_note_upper).rstrip("0").rstrip(".")

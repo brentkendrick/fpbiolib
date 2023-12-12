@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.1.3"  # brought in more norbi_stripe functions
+__version__ = "0.1.6"  # mod string width function
 
 
 from .rounders import (
@@ -16,4 +16,5 @@ from .formatting import (
     dec_notation,
     sci_notation,
     process_str_list,
+    str_px_width,
 )

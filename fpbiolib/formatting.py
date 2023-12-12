@@ -106,3 +106,46 @@ def process_str_list(str_list: list) -> list:
         str_list = str_list.replace(c, "")
     str_list = str_list.split(",")
     return [float(x) for x in str_list]
+
+
+def slider_num_formatter(
+    num, sci_sig_figs=3, sci_note_upper=10000, sci_note_lower=0.01
+):
+    if num == 0:
+        return "0"
+    elif num >= sci_note_upper or num < sci_note_lower:
+        return sci_notation(num, sci_sig_figs)
+    else:
+        return dec_notation(num, sci_note_upper).rstrip("0").rstrip(".")
+
+
+font_widths = {
+    "open_sans_12pt_px": {
+        ".": 4,
+        "-": 5.3,
+        "e": 7.1,
+        "E": 9.8,
+        "0": 8,
+        "1": 8,
+        "2": 8,
+        "3": 8,
+        "4": 8,
+        "5": 8,
+        "6": 8,
+        "7": 8,
+        "8": 8,
+        "9": 8,
+    },
+}
+
+
+def str_px_width(text: str, font="open_sans_12pt_px"):
+    """Determine total px width of text
+    - requires a font_widths dictionary of
+    characters and px widths.
+    """
+    char_widths = font_widths.get(font)
+    px_width = sum(char_widths.get(c) for c in str(text))
+    if px_width <= 11:
+        px_width = 11
+    return f"{str(px_width)}px"

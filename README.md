@@ -120,6 +120,12 @@ pip config set global.index-url PIP_INDEX_URL
 
 You can then install fpcd using pip normally `pip install fpbiolib`.
 
+To reset pip to using normal pypi, run
+
+```
+pip config unset global.index-url
+```
+
 ## Deploy
 
 Black is used to format all python files using a line length of 79. After

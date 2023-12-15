@@ -45,7 +45,6 @@ def any_files_exist(files: list) -> bool:
         item for sublist in existing_files for item in sublist
     ]  # flatten the list
     # getting file size
-    filesizes = {file: file.stat().st_size for file in existing_files}
 
     dates_created = [
         datetime.datetime.fromtimestamp(

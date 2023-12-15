@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.1.6"  # mod string width function
+__version__ = "0.1.7"  # add dir_file_ops
 
 
 from .rounders import (

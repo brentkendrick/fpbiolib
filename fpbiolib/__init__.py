@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.1.7"  # add dir_file_ops
+__version__ = "0.1.8"  # add idx func to df_transforms
 
 
 from .rounders import (

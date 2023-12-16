@@ -7,6 +7,13 @@ from scipy.signal import find_peaks, savgol_filter
 from .df_cleanup import downcast_floats_and_ints
 
 
+def find_idxs_of_str_in_dataframe(df: pd.DataFrame, search_str: str):
+    """Returns an array of arrays with cell coordinates
+    within the entire dataframe containing the full string.
+    """
+    return np.argwhere(df.values.astype(f"str") == search_str)
+
+
 def promote_first_row_to_header(df):
     df.columns = df.iloc[0].to_list()
     df.columns = [str(x) for x in df.columns]

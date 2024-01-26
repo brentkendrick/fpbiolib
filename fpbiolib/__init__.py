@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.1.8"  # add idx func to df_transforms
+__version__ = "0.2.0"  # pulled in latest modules from norbi_trace
 
 
 from .rounders import (

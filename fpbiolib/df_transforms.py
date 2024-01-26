@@ -354,7 +354,7 @@ def find_deriv(df, flip, window_length=5):
                 df[i], deriv=2, window_length=window_length, polyorder=3
             )
 
-        df[i] = dd
+        df.loc[:, i] = dd
 
     return df
 

@@ -1,4 +1,5 @@
 def make_list_vals_unique(input_list):
+    "ensures list only contains unique elements"
     output_list = []
     count = 1
     for name in input_list:

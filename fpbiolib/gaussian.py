@@ -37,7 +37,7 @@ def guess_heights(df, col, center_list, gain=0.95):
     freq_map = {}
     for i in df.iloc[:, 0]:
         j = math.floor(i)
-        freq_map[j] = float(df[col].get(df.iloc[:, 0] == i))
+        freq_map[j] = float(df[col].get(df.iloc[:, 0] == i).item())
     for i in center_list:
         height = freq_map[i]
         heights.append(gain * height)

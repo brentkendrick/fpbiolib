@@ -9,7 +9,7 @@ from scipy.optimize import curve_fit
 import pandas as pd
 import numpy as np
 
-from chemlabparser.tools.df_transforms import df_trunc
+from .df_transforms import df_trunc
 
 
 def sd_baseline_correction(
@@ -151,7 +151,7 @@ def sd_baseline_correction(
     elif method == "straight":
         freqCol = filtered_df.iloc[:, 0].values
         vals = dict()
-        for colName, colData in preprocessed_df.iteritems():
+        for colName, colData in preprocessed_df.items():
             vals[colName] = straight(freqCol, colData.values)
         corrected_spectra = pd.DataFrame(data=vals)
 
@@ -161,7 +161,7 @@ def sd_baseline_correction(
     elif method == "rubberband":
         freqCol = filtered_df.iloc[:, 0].values
         vals = dict()
-        for colName, colData in preprocessed_df.iteritems():
+        for colName, colData in preprocessed_df.items():
             vals[colName] = rubberband(freqCol, colData.values)
         corrected_spectra = pd.DataFrame(data=vals)
 

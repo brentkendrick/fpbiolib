@@ -1,5 +1,4 @@
 import feather
-import pandas as pd
 
 """
 Writing a custom function for feather

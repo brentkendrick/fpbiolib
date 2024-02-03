@@ -1,13 +1,12 @@
 # derivative and baselines
 from typing import OrderedDict
-from scipy.spatial import ConvexHull
-from scipy import sparse
-from scipy.sparse.linalg import spsolve
-from scipy.optimize import curve_fit
 
-
-import pandas as pd
 import numpy as np
+import pandas as pd
+from scipy import sparse
+from scipy.optimize import curve_fit
+from scipy.sparse.linalg import spsolve
+from scipy.spatial import ConvexHull
 
 from .df_transforms import df_trunc
 
@@ -228,7 +227,7 @@ def lengthen_baseline(x_original, y_original, base_short):
 def apply_als_baseline_to_df(
     df, asym_baseline_left_x, lam_interval, niter=100
 ):
-    x_val = np.asarray(df.iloc[:, 0])
+    x_val = df.iloc[:, 0].to_numpy()
 
     df_left_x_trunc = df_trunc(df, float(asym_baseline_left_x), x_val[-1])
 
@@ -243,12 +242,12 @@ def apply_als_baseline_to_df(
             y_val_trunc, lam_interval, niter=100
         )
 
-        y_val = np.asarray(df.iloc[:, (i + 1)])
+        y_val = df.iloc[:, (i + 1)].to_numpy().astype("float32")
 
         fitted_baseline = lengthen_baseline(
             x_val, y_val, fitted_baseline_trunc
         )
-
+        fitted_baseline = fitted_baseline.astype("float32")
         # Corrected df with baseline-subtracted y data
         df_cor.iloc[:, (i + 1)] = y_val - fitted_baseline
 

@@ -4,3 +4,7 @@ wheel
 twine
 pandas
 scipy
+redis
+fakeredis
+feather
+pyarrow

@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.2.1"  # update baselines
+__version__ = "0.2.2"  # added dataframe storage functions
 
 
 from .formatting import (

@@ -1,10 +1,11 @@
-import uuid
 import math
+import uuid
+
 import numpy as np
 import pandas as pd
 from scipy.signal import find_peaks, savgol_filter
 
-from .df_cleanup import downcast_floats_and_ints
+from .df_cleanup import downcast_floats_and_ints, rename_dup_cols_in_two_dfs
 
 
 def find_idxs_of_str_in_dataframe(df: pd.DataFrame, search_str: str):
@@ -39,9 +40,7 @@ def y_in_df_x_range(df, sel_trace, min_x, max_x):
     return y_trunc
 
 
-def x_y_in_df_x_range(
-    df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float
-):
+def x_y_in_df_x_range(df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float):
     """Truncate a dataframe's x (index 0) and
     y (specified column name) values and return
     x and y arrays"""
@@ -150,7 +149,7 @@ def many_x_y_to_x_many_y(df, cap=True, new_x=True):
         new_x_end = x_max
 
     num_rows = len(df.iloc[:, 0])
-    if num_rows > 5000 and cap == True:
+    if num_rows > 5000 and cap is True:
         x_new = np.linspace(new_x_start, new_x_end, 5000)
     else:
         x_new = np.linspace(new_x_start, new_x_end, num_rows)
@@ -209,7 +208,7 @@ def x_many_y_to_many_x_y(df):
     i = 2
     for _ in range(len(df.columns) - 2):
         unique_id = str(uuid.uuid4())
-        df.insert(i, f"x-tmp-{unique_id}", df.iloc[:, 0].values)
+        df.insert(i, f"x-tmp-{unique_id}", df.iloc[:, 0].to_numpy())
         i += 2
     return df
 
@@ -220,9 +219,7 @@ def x_reduced(x):
     We're going to interpolate the data to adjust all cgms to same x-interval, so will need to create a common spacing within the interpolated range
     """
 
-    desired_x_size = (
-        5000  # smaller gives faster processing at expense of resolution)
-    )
+    desired_x_size = 5000  # smaller gives faster processing at expense of resolution)
     data_spacing = abs(x[-1] - x[0]) / desired_x_size
 
     new_x_start = (
@@ -231,9 +228,7 @@ def x_reduced(x):
     new_x_end = (
         math.floor(x[-1] * 100) / 100
     )  # mult then div by 100 to get sig figs we want
-    return np.arange(
-        new_x_start, new_x_end, data_spacing
-    )  # new x-data spacing/range
+    return np.arange(new_x_start, new_x_end, data_spacing)  # new x-data spacing/range
 
 
 def df_reduced(df_r_in):
@@ -310,9 +305,7 @@ def df_center2(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = (
-            xctrs[i][0] - xctrs[ref_col_idx][0]
-        )  # shift data relative to ref sample
+        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(-shft)
 
     # Fill in ends of data after dataframe shift
@@ -326,9 +319,7 @@ def df_center_reverse(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = (
-            xctrs[i][0] - xctrs[ref_col_idx][0]
-        )  # shift data relative to ref sample
+        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(shft)
 
     # Fill in ends of data after dataframe shift
@@ -350,26 +341,28 @@ def find_deriv(df, flip, window_length=5):
                 df[i], deriv=2, window_length=window_length, polyorder=3
             )
         else:
-            dd = savgol_filter(
-                df[i], deriv=2, window_length=window_length, polyorder=3
-            )
+            dd = savgol_filter(df[i], deriv=2, window_length=window_length, polyorder=3)
 
         df.loc[:, i] = dd
 
     return df
 
 
-def smooth_and_deriv(df, order=0, window_length=5):
+def smooth_and_deriv(df, order=0, window_length=5, flip=False):
     """Smooths and adds any derivative (0-4) of the chosen signal to the DataFrame"""
 
     proteins = list(df.columns)[1:]
 
     for i in proteins:
-        dd = savgol_filter(
-            df[i], deriv=order, window_length=window_length, polyorder=3
-        )
+        if flip:
+            # negative if want flipped
+            dd = -1 * savgol_filter(
+                df[i], deriv=order, window_length=window_length, polyorder=3
+            )
+        else:
+            dd = savgol_filter(df[i], deriv=order, window_length=window_length, polyorder=3)
 
-        df[i] = dd
+        df.loc[:,i] = dd
 
     return df
 
@@ -394,4 +387,24 @@ def df_min_max_norm(df):
     df.iloc[:, 1:] = (df.iloc[:, 1:] - df.iloc[:, 1:].min()) / (
         df.iloc[:, 1:].max() - df.iloc[:, 1:].min()
     )  # This is a true min max normalization
+    return df
+    return df
+
+
+def combine_uploaded_dfs(prev_df, df):
+    """
+    To enable files to be added after an initial upload, we
+    need to assimilate x-axis from each source.  This is accomplished
+    by creating a multiple x, y set for each dataframe, concatenating
+    them together, and then running the many_x_y_to_x_many_y function
+    to recombine to a common x-axis (with interpolation as necessary)
+    """
+    prev_df = x_many_y_to_many_x_y(prev_df)
+
+    # concatenating dfs won't work if they have cols with same names
+    df = rename_dup_cols_in_two_dfs(prev_df, df)
+    df = pd.concat([prev_df, df], axis=1)
+
+    df = many_x_y_to_x_many_y(df)
+    df.reset_index(drop=True, inplace=True)
     return df

@@ -51,3 +51,15 @@ def fix_duplicate_col_names(df, filename=None):
     # rename the columns with the cols list.
     df.columns = cols.to_list()
     return df
+
+
+def rename_dup_cols_in_two_dfs(df1, df2):
+    """Will rename df2 columns with _dup if the name
+    is duplicated in df1 columns.  Assumes that
+    both dataframes each have unique column names
+    within themselves.
+    """
+    for i, val in enumerate(df2.columns):
+        if val in df1.columns:
+            df2.columns.values[i] = f"{val}_dup_name"
+    return df2

@@ -108,6 +108,10 @@ def process_str_list(str_list: list) -> list:
     return [float(x) for x in str_list]
 
 
+def none_to_empty_str(d):
+    return {k: v or "" for k, v in d.items()}
+
+
 def slider_num_formatter(
     num, sci_sig_figs=3, sci_note_upper=10000, sci_note_lower=0.01
 ):

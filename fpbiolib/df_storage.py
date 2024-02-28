@@ -2,6 +2,7 @@ import hashlib
 import io
 import json
 import os
+import pickle
 import warnings
 
 import fakeredis
@@ -50,7 +51,7 @@ class redis_store:
 
     if "REDIS_URL" in os.environ:
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-        # print("REAL redis is running and the url is: ", os.environ["REDIS_URL"])
+        print("REAL redis is running and the url is: ", os.environ["REDIS_URL"])
     else:
         warnings.warn("Using FakeRedis - Not suitable for Production Use.")
         r = fakeredis.FakeStrictRedis()
@@ -84,6 +85,35 @@ class redis_store:
         try:
             if data_type == b"pd.DataFrame":
                 value = pd.read_parquet(io.BytesIO(serialized_value))
+            else:
+                value = json.loads(serialized_value)
+        except Exception as e:
+            print(e)
+            print(f"ERROR LOADING {data_type - key}")
+            raise e
+        return value
+
+    @staticmethod
+    def pickle_save(value, key="specify_key"):
+        if isinstance(value, pd.DataFrame):
+            type = "pd.DataFrame"
+            serialized_value = pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
+        else:
+            serialized_value = json.dumps(
+                value, cls=plotly.utils.PlotlyJSONEncoder
+            ).encode("utf-8")
+            type = "json-serialized"
+
+        redis_store.r.set(f"_value_{key}", serialized_value)
+        redis_store.r.set(f"_type_{key}", type)
+
+    @staticmethod
+    def pickle_load(key):
+        data_type = redis_store.r.get(f"_type_{key}")
+        serialized_value = redis_store.r.get(f"_value_{key}")
+        try:
+            if data_type == b"pd.DataFrame":
+                value = pickle.loads(serialized_value)
             else:
                 value = json.loads(serialized_value)
         except Exception as e:

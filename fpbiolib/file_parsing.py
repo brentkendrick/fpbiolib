@@ -10,14 +10,42 @@ import numpy as np
 import pandas as pd
 from chemlabparser.parser import FileReader
 from scipy.io.netcdf import NetCDFFile
-from chemlabparser.tools.df_cleanup import (
-    cleanup_df_import,
-    downcast_floats_and_ints,
-    fix_duplicate_col_names,
-)
-from chemlabparser.tools.df_transforms import x_many_y_to_many_x_y
+
+from fpbiolib.df_cleanup import (cleanup_df_import, downcast_floats_and_ints,
+                                 fix_duplicate_col_names)
+from fpbiolib.df_transforms import x_many_y_to_many_x_y
 
 # File parsing and temporary dataframe storage functions
+
+
+def parse_uploaded_files(contents, filenames, parser):
+    """Create dataframes based on type of file loaded
+    and parser function.  Since the user can click-select 
+    multiple files we need to append each parsed file's 
+    dataframe to a list and then concatenate them.
+    """
+    try:
+        dfs = []
+        for content, filename in zip(contents, filenames):
+            content_type, content_string = content.split(",")
+            b64_content = base64.b64decode(content_string)
+            df_i = parser(b64_content, filename)
+            dfs.append(df_i)
+
+        df = pd.concat(dfs, axis=1)
+
+        df = cleanup_df_import(df)
+        df = fix_duplicate_col_names(df)
+        df = downcast_floats_and_ints(df)
+        df.reset_index(drop=True, inplace=True)
+        upload_error = False
+
+    except Exception:
+        print("Incompatible file, returning empty dataframe")
+        df = pd.DataFrame()
+        upload_error = True
+
+    return df, upload_error
 
 
 def parse_x_many_y_data(content, filename):
@@ -36,9 +64,7 @@ def parse_x_many_y_data(content, filename):
             df = pd.read_excel(io.BytesIO(content))
         elif "txt" or "tsv" in filename.lower():
             # Assume that the user upl, delimiter = r'\s+'oaded an excel file
-            df = pd.read_csv(
-                io.StringIO(content.decode("utf-8")), delimiter=r"\s+"
-            )
+            df = pd.read_csv(io.StringIO(content.decode("utf-8")), delimiter=r"\s+")
 
         # Last row has nan values, let's drop those, cleanup and sort
         # by ascending wavelength
@@ -78,9 +104,7 @@ def parse_many_x_y_data(content, filename):
             df = pd.read_excel(io.BytesIO(content))
         elif "txt" or "tsv" in filename.lower():
             # Assume that the user upl, delimiter = r'\s+'oaded an excel file
-            df = pd.read_csv(
-                io.StringIO(content.decode("utf-8")), delimiter=r"\s+"
-            )
+            df = pd.read_csv(io.StringIO(content.decode("utf-8")), delimiter=r"\s+")
 
         # Last row has nan values, let's drop those, cleanup and sort
         # by ascending wavelength
@@ -119,9 +143,7 @@ def parse_du800_csv_data(content, filename):
 
         num_cols = idx2 - idx1 - 2
         samps = [
-            str(df.iloc[26 + i, 1])
-            + " "
-            + str(df.iloc[26 + i, 3]).replace("nan", "")
+            str(df.iloc[26 + i, 1]) + " " + str(df.iloc[26 + i, 3]).replace("nan", "")
             for i in range(num_cols)
         ]
         # print(samps)
@@ -162,8 +184,7 @@ def parse_du800_dux_data(content, filename):
 
             # loop through the entire file string, s, and find the start positions of all the sample data
             sample_name_start_positions = [
-                m.end() + 1
-                for m in re.finditer(sample_name_start_hex_string, content)
+                m.end() + 1 for m in re.finditer(sample_name_start_hex_string, content)
             ]
 
             sample_names = []
@@ -171,8 +192,7 @@ def parse_du800_dux_data(content, filename):
                 f.seek(position)
                 read_temp = f.read(200)
                 sample_text_end_position = [
-                    m.start()
-                    for m in re.finditer(b"\x01\x01\x00\x00\x00", read_temp)
+                    m.start() for m in re.finditer(b"\x01\x01\x00\x00\x00", read_temp)
                 ][0]
                 f.seek(position)
                 sample_name = f.read(sample_text_end_position).decode("utf-8")
@@ -185,8 +205,7 @@ def parse_du800_dux_data(content, filename):
 
             # loop through the entire file string, s, and find the start positions of all the sample data
             wavelength_start_positions = [
-                m.start() + 44
-                for m in re.finditer(data_start_hex_string, content)
+                m.start() + 44 for m in re.finditer(data_start_hex_string, content)
             ]
 
             uv_dataset = OrderedDict()
@@ -217,9 +236,7 @@ def parse_du800_dux_data(content, filename):
                     inp_x = struct.unpack("<d", f.read(8))[0]
                     absorbance_data.append(inp_x)
 
-                uv_dataset[
-                    f"{sample_names[i]} Wavelength (nm)"
-                ] = wavelength_data
+                uv_dataset[f"{sample_names[i]} Wavelength (nm)"] = wavelength_data
                 uv_dataset[f"{sample_names[i]}"] = absorbance_data
                 i += 1
 
@@ -474,9 +491,7 @@ def parse_cdf_data1(content, filename):
         f = NetCDFFile(io.BytesIO(content))
 
         tic = f.variables["ordinate_values"].data
-        tic = (
-            tic.byteswap().newbyteorder()
-        )  # Convert big endian to LE, create array
+        tic = tic.byteswap().newbyteorder()  # Convert big endian to LE, create array
 
         xstart = f.variables["detector_minimum_value"].data[()]
         xend = f.variables["detector_maximum_value"].data[()]
@@ -513,21 +528,13 @@ def parse_trace_html_data(content, filename):
             r'"name":"([a-zA-Z0-9_.+\s-]+)","x":\[([^\]]+)\],"y":\[([^\]]+)'
         )  # grabs names and all characters (floats) NOT in brackets
 
-        sample_names = [
-            m.group(1) for m in data_st_str.finditer(content.decode())
-        ]
+        sample_names = [m.group(1) for m in data_st_str.finditer(content.decode())]
 
-        x_data = [
-            m.group(2).split(",")
-            for m in data_st_str.finditer(content.decode())
-        ]
+        x_data = [m.group(2).split(",") for m in data_st_str.finditer(content.decode())]
 
         x_data = [[float(x) for x in x_list] for x_list in x_data]
 
-        y_data = [
-            m.group(3).split(",")
-            for m in data_st_str.finditer(content.decode())
-        ]
+        y_data = [m.group(3).split(",") for m in data_st_str.finditer(content.decode())]
 
         y_data = [[float(y) for y in y_list] for y_list in y_data]
 
@@ -556,10 +563,11 @@ def parse_params(contents, filename) -> dict:
     """
     Parse uploaded parameters file and return dict...
     """
-    content_type, content_string = contents.split(",")
-    decoded = base64.b64decode(content_string)
-
+    if contents is None or filename is None:
+        return {}
     try:
+        content_type, content_string = contents.split(",")
+        decoded = base64.b64decode(content_string)
         if "csv" in filename.lower():
             # Assume that the user uploaded a CSV or TXT file
             # df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), index_col=0)

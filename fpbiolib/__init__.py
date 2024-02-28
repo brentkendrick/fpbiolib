@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.2.2"  # added dataframe storage functions
+__version__ = "0.2.4"  # add pickle method to df_storage.py
 
 
 from .formatting import (

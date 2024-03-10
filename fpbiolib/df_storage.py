@@ -51,7 +51,7 @@ class redis_store:
 
     if "REDIS_URL" in os.environ:
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-        print("REAL redis is running and the url is: ", os.environ["REDIS_URL"])
+        # print("REAL redis is running and the url is: ", os.environ["REDIS_URL"])
     else:
         warnings.warn("Using FakeRedis - Not suitable for Production Use.")
         r = fakeredis.FakeStrictRedis()
@@ -97,7 +97,9 @@ class redis_store:
     def pickle_save(value, key="specify_key"):
         if isinstance(value, pd.DataFrame):
             type = "pd.DataFrame"
-            serialized_value = pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
+            serialized_value = pickle.dumps(
+                value, protocol=pickle.HIGHEST_PROTOCOL
+            )
         else:
             serialized_value = json.dumps(
                 value, cls=plotly.utils.PlotlyJSONEncoder

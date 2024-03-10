@@ -6,5 +6,6 @@ pandas
 scipy
 redis
 fakeredis
-feather
 pyarrow
+dash
+dash-bootstrap-components

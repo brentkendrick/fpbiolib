@@ -50,7 +50,7 @@ def sci_notation(num, sig_figs, e_notation=True, cap_e=False):
     if exp2_match[0] == "+":
         exp2_match = exp2_match[1:]
     sci_str = "".join(exp2_match)
-    sci_num = sci_num.replace("e", " \u00D7 10")
+    sci_num = sci_num.replace("e", " \u00d7 10")
     return sci_num.replace(exp_match[-1], get_super(sci_str))
 
 
@@ -61,6 +61,10 @@ Lower-case Greek: α β γ δ ε ζ η θ ι κ λ µ ν ξ ο π ⍴ ς σ τ �
 Upper-case Greek: Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω
 Symbols: × ∙ ± ≤ ≥ ¼ ½ ¾ ° ∞ ™ © ® ← ↑ → ↓ ⛷ ⛺ ☕
 """
+
+greek_alphabet = "ΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω"
+latin_alphabet = "AaBbGgDdEeZzHhJjIiKkLlMmNnXxOoPpRrSssTtUuFfQqYyWw"
+greek2latin = str.maketrans(greek_alphabet, latin_alphabet)
 
 
 def to_sup(s):
@@ -80,12 +84,12 @@ def to_sup(s):
         "c": "\u1d9c",
         "d": "\u1d48",
         "e": "\u1d49",
-        "f": "\u1dA0",
-        "g": "\u1d4D",
-        "h": "\u02B0",
+        "f": "\u1da0",
+        "g": "\u1d4d",
+        "h": "\u02b0",
         "i": "\u2071",
-        "j": "\u02B2",
-        "-": "\u207B",
+        "j": "\u02b2",
+        "-": "\u207b",
     }
 
     return "".join(

@@ -280,14 +280,14 @@ def ls_leach_scheraga_with_bl_drift_fun(x, *params):
 def apply_light_scattering_correction_to_df(df, ref_lambda):
     # Create a copy of the df, which will have y-values overwritten with fitted baselines
     df_fitted_ls_baseline = df.copy()
-
     # Create a dictionary to hold b param
     b_params = OrderedDict()
 
     # find the corresponding index location from the wavelength array
-    idx = df.iloc[:, 0].sub(ref_lambda).abs().idxmin()  # finds closest index
+    idx = (
+        df.iloc[:, 0].sub(float(ref_lambda)).abs().idxmin()
+    )  # finds closest index
     # idx = (df[df.iloc[:, 0] == ref_lambda].index.values)[0] # Only works for exact wavelength match
-
     for i in range(len(df.columns) - 1):
         """
         Create a new x, y array of the baseline region.

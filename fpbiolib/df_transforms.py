@@ -40,7 +40,9 @@ def y_in_df_x_range(df, sel_trace, min_x, max_x):
     return y_trunc
 
 
-def x_y_in_df_x_range(df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float):
+def x_y_in_df_x_range(
+    df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float
+):
     """Truncate a dataframe's x (index 0) and
     y (specified column name) values and return
     x and y arrays"""
@@ -67,6 +69,17 @@ def log_df(df):
     return log_df
 
 
+# When combining x_many_y datasets together, first create a temp
+# many_x_y, concat them, and then run them through many_x_y_to_x_many_y
+def x_many_y_to_many_x_y(df):
+    i = 2
+    for _ in range(len(df.columns) - 2):
+        unique_id = str(uuid.uuid4())
+        df.insert(i, f"x-tmp-{unique_id}", df.iloc[:, 0].to_numpy())
+        i += 2
+    return df
+
+
 def x_many_y_interpolate(df, cap=True):
     """
     Interpolates to consistent length. cap is used when
@@ -88,7 +101,7 @@ def x_many_y_interpolate(df, cap=True):
     )  # mult then div by 100 to get sig figs we want
 
     num_rows = len(df.iloc[:, 0])
-    if num_rows > 5000 and cap == True:
+    if num_rows > 5000 and cap is True:
         x_new = np.linspace(new_x_start, new_x_end, 5000)
     else:
         x_new = np.linspace(new_x_start, new_x_end, num_rows)
@@ -202,24 +215,15 @@ def many_x_y_to_x_many_y_no_interpolate(df):
     return downcast_floats_and_ints(proc_df)
 
 
-# When combining x_many_y datasets together, first create a temp
-# many_x_y, concat them, and then run them through many_x_y_to_x_many_y
-def x_many_y_to_many_x_y(df):
-    i = 2
-    for _ in range(len(df.columns) - 2):
-        unique_id = str(uuid.uuid4())
-        df.insert(i, f"x-tmp-{unique_id}", df.iloc[:, 0].to_numpy())
-        i += 2
-    return df
-
-
 def x_reduced(x):
     """SHRINK DATASET FOR FASTER VISUALIZATION
     function to take a 1-D array and create x limits to 2nd decimal
     We're going to interpolate the data to adjust all cgms to same x-interval, so will need to create a common spacing within the interpolated range
     """
 
-    desired_x_size = 5000  # smaller gives faster processing at expense of resolution)
+    desired_x_size = (
+        5000  # smaller gives faster processing at expense of resolution)
+    )
     data_spacing = abs(x[-1] - x[0]) / desired_x_size
 
     new_x_start = (
@@ -228,7 +232,9 @@ def x_reduced(x):
     new_x_end = (
         math.floor(x[-1] * 100) / 100
     )  # mult then div by 100 to get sig figs we want
-    return np.arange(new_x_start, new_x_end, data_spacing)  # new x-data spacing/range
+    return np.arange(
+        new_x_start, new_x_end, data_spacing
+    )  # new x-data spacing/range
 
 
 def df_reduced(df_r_in):
@@ -305,7 +311,9 @@ def df_center2(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
+        shft = (
+            xctrs[i][0] - xctrs[ref_col_idx][0]
+        )  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(-shft)
 
     # Fill in ends of data after dataframe shift
@@ -319,7 +327,9 @@ def df_center_reverse(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
+        shft = (
+            xctrs[i][0] - xctrs[ref_col_idx][0]
+        )  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(shft)
 
     # Fill in ends of data after dataframe shift
@@ -341,7 +351,9 @@ def find_deriv(df, flip, window_length=5):
                 df[i], deriv=2, window_length=window_length, polyorder=3
             )
         else:
-            dd = savgol_filter(df[i], deriv=2, window_length=window_length, polyorder=3)
+            dd = savgol_filter(
+                df[i], deriv=2, window_length=window_length, polyorder=3
+            )
 
         df.loc[:, i] = dd
 
@@ -360,9 +372,11 @@ def smooth_and_deriv(df, order=0, window_length=5, flip=False):
                 df[i], deriv=order, window_length=window_length, polyorder=3
             )
         else:
-            dd = savgol_filter(df[i], deriv=order, window_length=window_length, polyorder=3)
+            dd = savgol_filter(
+                df[i], deriv=order, window_length=window_length, polyorder=3
+            )
 
-        df.loc[:,i] = dd
+        df.loc[:, i] = dd
 
     return df
 
@@ -391,7 +405,7 @@ def df_min_max_norm(df):
     return df
 
 
-def combine_uploaded_dfs(prev_df, df):
+def combine_uploaded_dfs(prev_df, df, cap=False, new_x=False):
     """
     To enable files to be added after an initial upload, we
     need to assimilate x-axis from each source.  This is accomplished
@@ -405,6 +419,6 @@ def combine_uploaded_dfs(prev_df, df):
     df = rename_dup_cols_in_two_dfs(prev_df, df)
     df = pd.concat([prev_df, df], axis=1)
 
-    df = many_x_y_to_x_many_y(df)
+    df = many_x_y_to_x_many_y(df, cap=cap, new_x=new_x)
     df.reset_index(drop=True, inplace=True)
     return df

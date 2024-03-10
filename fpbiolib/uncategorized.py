@@ -1,4 +1,5 @@
 """General uncategorized functions"""
+
 import sys
 
 # Check to see if module is loaded (e.g. in a Jupyter notebook cell)

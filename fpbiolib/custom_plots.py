@@ -615,9 +615,9 @@ def primary_graph(
                 ]
                 for anno in update_annos:
                     if current_anno.get(f"annotations[{index}].{anno}"):
-                        fig["layout"]["annotations"][index][
-                            anno
-                        ] = current_anno.get(f"annotations[{index}].{anno}")
+                        fig["layout"]["annotations"][index][anno] = (
+                            current_anno.get(f"annotations[{index}].{anno}")
+                        )
                     layout_data[f"annotations[{index}].{anno}"] = annotations[
                         anno
                     ]

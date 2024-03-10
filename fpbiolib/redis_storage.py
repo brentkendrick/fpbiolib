@@ -4,6 +4,7 @@ If running local redis, install for WSL2 using instructions here: https://docs.m
 To start the local redis server: sudo service redis-server start
 To stop: sudo service redis-server stop
 """
+
 import json
 
 import pandas as pd

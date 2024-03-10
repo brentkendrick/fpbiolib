@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.2.4"  # add pickle method to df_storage.py
+__version__ = "0.3.2"  # ensure float value used in ref_lamda in ls baseline
 
 
 from .formatting import (

@@ -23,7 +23,6 @@ assignments : List
 
 """
 
-
 # Dong et. al., Biochemistry. 1990
 dong_h2o_1990 = {
     "means": [

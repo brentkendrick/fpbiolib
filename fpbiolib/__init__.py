@@ -1,5 +1,7 @@
 # base version number
-__version__ = "0.3.2"  # ensure float value used in ref_lamda in ls baseline
+__version__ = (
+    "0.3.3"  # add print stmt to follow if Redis is live in df_storage.py
+)
 
 
 from .formatting import (

@@ -51,9 +51,11 @@ class redis_store:
 
     if "REDIS_URL" in os.environ:
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-        # print("REAL redis is running and the url is: ", os.environ["REDIS_URL"])
+        print(
+            "REAL redis is running and the url is: ", os.environ["REDIS_URL"]
+        )
     else:
-        warnings.warn("Using FakeRedis - Not suitable for Production Use.")
+        warnings.warn("Using FakeRedis - Not suitable for Production Use!")
         r = fakeredis.FakeStrictRedis()
 
     @staticmethod

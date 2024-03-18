@@ -1,7 +1,5 @@
 # base version number
-__version__ = (
-    "0.3.3"  # add print stmt to follow if Redis is live in df_storage.py
-)
+__version__ = "0.3.4"  # rm print
 
 
 from .formatting import (

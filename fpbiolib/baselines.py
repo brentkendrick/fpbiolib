@@ -16,7 +16,7 @@ def sd_baseline_correction(
     cols=None,
     freq=0,
     flip=False,
-    method="min",
+    method="Minimum",
     bounds=[1550, 1750],
     inplace=False,
 ):
@@ -49,9 +49,9 @@ def sd_baseline_correction(
         integer is a column name. If the integer is not a column name, it is
         assumed to be the index of the frequency range.
 
-    method :  Str (default: 'min')
-        Method used for baseline subtraction. Can be `min` or `rubberband`.
-        `min` subtracts by the minimum value in the defined range. `rubberband`
+    method :  Str (default: 'Minimum')
+        Method used for baseline subtraction. Can be `Minimum`, `Linear`, or `RubberBand`.
+        `Minimum` subtracts by the minimum value in the defined range. `RubberBand`
         applies a convexhull fit of the baseline around the defined range.
 
     flip : bool (default: False)
@@ -141,33 +141,27 @@ def sd_baseline_correction(
         preprocessed_df = filtered_df[cols]
 
     # apply the baseline subtraction method
-    if method == "none":
+    if method == "None":
         corrected_spectra = preprocessed_df
 
-    elif method == "min":
+    elif method == "Minimum":
         corrected_spectra = preprocessed_df.apply(minimum)
 
-    elif method == "straight":
+    elif method == "Linear":
         freqCol = filtered_df.iloc[:, 0].values
         vals = dict()
         for colName, colData in preprocessed_df.items():
             vals[colName] = straight(freqCol, colData.values)
         corrected_spectra = pd.DataFrame(data=vals)
 
-    #     elif method == 'asym':
-    #         corrected_spectra = preprocessed_df.apply(asym_baseline)
-
-    elif method == "rubberband":
+    elif method == "RubberBand":
         freqCol = filtered_df.iloc[:, 0].values
         vals = dict()
         for colName, colData in preprocessed_df.items():
             vals[colName] = rubberband(freqCol, colData.values)
         corrected_spectra = pd.DataFrame(data=vals)
 
-    elif method == "complex":
-        corrected_spectra = preprocessed_df
-
-    elif method == "R-M Scattering":
+    elif method == "ASLS":
         corrected_spectra = preprocessed_df
 
     else:

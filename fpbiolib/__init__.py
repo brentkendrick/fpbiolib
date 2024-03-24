@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.3.5"  # fix redis call in df_storage
+__version__ = "0.3.6"  # update baseline naming
 
 
 from .formatting import (

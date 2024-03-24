@@ -10,7 +10,7 @@ import json
 import pandas as pd
 from redis import Redis
 
-from config.settings import REDIS_URL
+from fpbiolib.config.settings import REDIS_URL
 
 # r = Redis.from_url(REDIS_URL, decode_responses=True)  # use if running docker
 r = Redis.from_url(
@@ -48,7 +48,7 @@ def read_dataframe(df_name):
     """
     # print('Calling read_dataframe')
     df = r.get(df_name)
-    df = pd.read_json(df)
+    df = pd.read_json(df)  # type: ignore
     return df
 
 
@@ -73,7 +73,7 @@ def read_numeric(name):
     """
     # print('Calling read_dataframe')
     json_number = r.get(name)
-    return float(json.loads(json_number))
+    return float(json.loads(json_number))  # type: ignore
 
 
 def write_string(string_input, name):
@@ -93,4 +93,4 @@ def read_string(name):
     """
     # print('Calling read_dataframe')
     json_string = r.get(name)
-    return json.loads(json_string)
+    return json.loads(json_string)  # type: ignore

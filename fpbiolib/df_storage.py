@@ -49,10 +49,10 @@ class redis_store:
     will not scale across multiple processes.
     """
 
-    if "REDIS_URL" in os.environ:
+    try:
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-        # print("Redis ok in redis_store: ", os.environ["REDIS_URL"])
-    else:
+        r.ping()
+    except Exception:
         warnings.warn("Using FakeRedis - Not suitable for Production Use!")
         r = fakeredis.FakeStrictRedis()
 
@@ -84,9 +84,9 @@ class redis_store:
         serialized_value = redis_store.r.get(f"_value_{key}")
         try:
             if data_type == b"pd.DataFrame":
-                value = pd.read_parquet(io.BytesIO(serialized_value))
+                value = pd.read_parquet(io.BytesIO(serialized_value))  # type: ignore
             else:
-                value = json.loads(serialized_value)
+                value = json.loads(serialized_value)  # type: ignore
         except Exception as e:
             print(e)
             print(f"ERROR LOADING {data_type - key}")
@@ -115,9 +115,9 @@ class redis_store:
         serialized_value = redis_store.r.get(f"_value_{key}")
         try:
             if data_type == b"pd.DataFrame":
-                value = pickle.loads(serialized_value)
+                value = pickle.loads(serialized_value)  # type: ignore
             else:
-                value = json.loads(serialized_value)
+                value = json.loads(serialized_value)  # type: ignore
         except Exception as e:
             print(e)
             print(f"ERROR LOADING {data_type - key}")

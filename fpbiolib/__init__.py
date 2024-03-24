@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.3.4"  # rm print
+__version__ = "0.3.5"  # fix redis call in df_storage
 
 
 from .formatting import (

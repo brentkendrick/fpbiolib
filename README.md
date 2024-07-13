@@ -140,7 +140,10 @@ pip config unset global.index-url
 ## Install with pip
 
 ```bash
+pip install --upgrade pip setuptools wheel # needs these to work
+
 pip install git+https://github.com/brentkendrick/fpbiolib.git@v0.3.6
+
 ```
 
 in a requirements.txt file:

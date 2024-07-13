@@ -1,7 +1,8 @@
 import sys
-import fpbiolib
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
+import fpbiolib
 
 with open("README.md") as f:
     long_desc = f.read()
@@ -12,6 +13,7 @@ if sys.version_info < (3, 5):
 
 install_requires = [
     "pandas>=2.0",
+    "numpy>=1.26.0",
     "scipy>=1.7.3",
 ]
 

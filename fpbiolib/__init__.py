@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.3.6"  # update baseline naming
+__version__ = "0.4.0"  # update for public git repo
 
 
 from .formatting import (

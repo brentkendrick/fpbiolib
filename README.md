@@ -56,11 +56,22 @@ Set local directory and subdirectories to use specific python version
 pyenv local 3.11.4
 ```
 
-Create virtual environment and activate it
+Create a virtual env with a Python version:
 
+```bash
+pyenv virtualenv 3.8.6 project1
 ```
-python -m venv env311
-source ./env311/bin/activate
+
+List versions of virtual environments:
+
+```bash
+pyenv versions
+```
+
+Activate a virtual version:
+
+```bash
+pyenv activate project1
 ```
 
 Install setuptools
@@ -126,17 +137,24 @@ To reset pip to using normal pypi, run
 pip config unset global.index-url
 ```
 
-## Deploy
-
-Black is used to format all python files using a line length of 79. After
-formatting remember to increment the package version prior to building and deploy.
-Push to CodeArtifact as follows. (must pip install twine first)
+## Install with pip
 
 ```bash
-black --line-length 79 .
+pip install git+https://github.com/brentkendrick/fpbiolib.git@v0.3.6
+```
+
+in a requirements.txt file:
+
+```bash
+@ git+https://github.com/brentkendrick/fpbiolib@releases/tag/v0.3.6
+```
+
+## Deploy to pypi (not currently on pypi, just fyi)
+
+```bash
 python setup.py sdist bdist_wheel
-aws codeartifact login --tool twine --domain norbi --repository norbi
-twine upload --repository codeartifact dist/*
+twine check dist/*
+twine upload dist/*
 ```
 
 ### Redis usage

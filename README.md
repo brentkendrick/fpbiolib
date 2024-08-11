@@ -149,7 +149,7 @@ pip install git+https://github.com/brentkendrick/fpbiolib.git@v0.3.6
 in a requirements.txt file:
 
 ```bash
-@ git+https://github.com/brentkendrick/fpbiolib@releases/tag/v0.3.6
+-f git+https://github.com/brentkendrick/fpbiolib@v0.4.0
 ```
 
 ## Deploy to pypi (not currently on pypi, just fyi)

@@ -44,8 +44,7 @@ def fix_duplicate_col_names(df, filename=None):
         for dup in cols[cols.duplicated()].unique():
             # print("duplicate: ", dup)
             cols[cols[cols == dup].index.values.tolist()] = [
-                dup + "." + str(i) if i != 0 else dup
-                for i in range(sum(cols == dup))
+                dup + "." + str(i) if i != 0 else dup for i in range(sum(cols == dup))
             ]
 
     # rename the columns with the cols list.
@@ -53,7 +52,7 @@ def fix_duplicate_col_names(df, filename=None):
     return df
 
 
-def rename_dup_cols_in_two_dfs(df1, df2):
+def rename_dup_cols_in_two_dfs_old(df1, df2):
     """Will rename df2 columns with _dup if the name
     is duplicated in df1 columns.  Assumes that
     both dataframes each have unique column names
@@ -63,3 +62,53 @@ def rename_dup_cols_in_two_dfs(df1, df2):
         if val in df1.columns:
             df2.columns.values[i] = f"{val}_dup_name"
     return df2
+
+
+def fix_dups(mylist, sep="", start=1, update_first=True):
+    mylist_dups = {}
+    # build dictionary containing val: [occurrences, suffix]
+    for val in mylist:
+        if val not in mylist_dups:
+            mylist_dups[val] = [1, start - 1]
+        else:
+            mylist_dups[val][0] += 1
+
+    # define function to update duplicate values with suffix, check if updated value already exists
+    def update_val(val, num):
+        temp_val = sep.join([str(x) for x in [val, num]])
+        if temp_val not in mylist_dups:
+            return temp_val, num
+        else:
+            num += 1
+            return update_val(val, num)
+
+    # update list
+    for i, val in enumerate(mylist):
+        if mylist_dups[val][0] > 1:
+            mylist_dups[val][1] += 1
+            if update_first or mylist_dups[val][1] > start:
+                new_val, mylist_dups[val][1] = update_val(val, mylist_dups[val][1])
+                mylist[i] = new_val
+
+    return mylist
+
+
+def rename_dup_cols_in_two_dfs(df1, df2):
+    """Will rename df2 columns with _dup if the name
+    is duplicated in df1 columns.  Assumes that
+    both dataframes each have unique column names
+    within themselves.
+    """
+    combined_cols = df1.columns.to_list() + df2.columns.to_list()
+    # print("combined_cols: ", combined_cols)
+    combined_cols_uniquified = fix_dups(
+        combined_cols, sep=".", start=0, update_first=False
+    )
+    # print("combined_cols_uniqueified: ", combined_cols_uniquified)
+    df1_len = len(df1.columns)
+    for i, val in enumerate(df1.columns):
+        df1.columns.values[i] = combined_cols_uniquified[i]
+    for i, val in enumerate(df2.columns):
+        df2.columns.values[i] = combined_cols_uniquified[i + df1_len]
+
+    return df1, df2

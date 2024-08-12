@@ -51,6 +51,27 @@ def parse_uploaded_files(contents, filenames, parser):
     return df, upload_error
 
 
+def parse_filereader_parser_data(content, filename):
+    try:
+        # print("filename: ", filename)
+        fr = FileReader(filename=filename, decoded_file_contents=content)
+        # print("\nfr: \n", fr)
+        # print("fr filename: ", fr.fullpath, fr.filename)
+        # print("\nsuffix: ", str(fr.filename.suffix).upper())
+        # TODO work on ascending dataframes!
+        if str(fr.filename.suffix).upper() == ".DSX":
+            df = fr.parser.average_traces_df
+        else:
+            df = fr.parser.df
+        df = df.sort_values(by=df.columns[0])
+
+    except Exception as e:
+        print(e)
+        raise
+
+    return df
+
+
 def parse_x_many_y_data(content, filename):
     """
     Parse uploaded tabular file and return dataframe.
@@ -471,36 +492,6 @@ def parse_waters_tab_arw_data(content, filename):
 #         raise
 
 #     return df
-
-
-def parse_cdf_data(content, filename):
-    try:
-        # print("filename: ", filename)
-        fr = FileReader(filename=filename, decoded_file_contents=content)
-        # print("\nfr: \n", fr)
-        # print("fr filename: ", fr.fullpath, fr.filename)
-        df = fr.parser.df
-
-    except Exception as e:
-        print(e)
-        raise
-
-    return df
-
-
-def parse_bruker_ftir_data(content, filename):
-    try:
-        # print("filename: ", filename)
-        fr = FileReader(filename=filename, decoded_file_contents=content)
-        # print("\nfr: \n", fr)
-        # print("fr filename: ", fr.fullpath, fr.filename)
-        df = fr.parser.df
-
-    except Exception as e:
-        print(e)
-        raise
-
-    return df
 
 
 def parse_cdf_data1(content, filename):

@@ -1,5 +1,5 @@
 # base version number
-__version__ = "0.4.1"  # update ftir file parsing
+__version__ = "0.5.0"  # update ftir file parsing
 
 
 from .formatting import (

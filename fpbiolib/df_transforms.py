@@ -40,9 +40,7 @@ def y_in_df_x_range(df, sel_trace, min_x, max_x):
     return y_trunc
 
 
-def x_y_in_df_x_range(
-    df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float
-):
+def x_y_in_df_x_range(df: pd.DataFrame, sel_trace: str, min_x: float, max_x: float):
     """Truncate a dataframe's x (index 0) and
     y (specified column name) values and return
     x and y arrays"""
@@ -221,9 +219,7 @@ def x_reduced(x):
     We're going to interpolate the data to adjust all cgms to same x-interval, so will need to create a common spacing within the interpolated range
     """
 
-    desired_x_size = (
-        5000  # smaller gives faster processing at expense of resolution)
-    )
+    desired_x_size = 5000  # smaller gives faster processing at expense of resolution)
     data_spacing = abs(x[-1] - x[0]) / desired_x_size
 
     new_x_start = (
@@ -232,9 +228,7 @@ def x_reduced(x):
     new_x_end = (
         math.floor(x[-1] * 100) / 100
     )  # mult then div by 100 to get sig figs we want
-    return np.arange(
-        new_x_start, new_x_end, data_spacing
-    )  # new x-data spacing/range
+    return np.arange(new_x_start, new_x_end, data_spacing)  # new x-data spacing/range
 
 
 def df_reduced(df_r_in):
@@ -311,9 +305,7 @@ def df_center2(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = (
-            xctrs[i][0] - xctrs[ref_col_idx][0]
-        )  # shift data relative to ref sample
+        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(-shft)
 
     # Fill in ends of data after dataframe shift
@@ -327,9 +319,7 @@ def df_center_reverse(df, xctrs, reference_trace):
     ref_col_idx = df.columns.get_loc(reference_trace) - 1
 
     for i in range(len(df.columns) - 1):
-        shft = (
-            xctrs[i][0] - xctrs[ref_col_idx][0]
-        )  # shift data relative to ref sample
+        shft = xctrs[i][0] - xctrs[ref_col_idx][0]  # shift data relative to ref sample
         df.iloc[:, (i + 1)] = df.iloc[:, (i + 1)].shift(shft)
 
     # Fill in ends of data after dataframe shift
@@ -351,9 +341,7 @@ def find_deriv(df, flip, window_length=5):
                 df[i], deriv=2, window_length=window_length, polyorder=3
             )
         else:
-            dd = savgol_filter(
-                df[i], deriv=2, window_length=window_length, polyorder=3
-            )
+            dd = savgol_filter(df[i], deriv=2, window_length=window_length, polyorder=3)
 
         df.loc[:, i] = dd
 
@@ -416,8 +404,8 @@ def combine_uploaded_dfs(prev_df, df, cap=False, new_x=False):
     prev_df = x_many_y_to_many_x_y(prev_df)
 
     # concatenating dfs won't work if they have cols with same names
-    df = rename_dup_cols_in_two_dfs(prev_df, df)
-    df = pd.concat([prev_df, df], axis=1)
+    df1, df2 = rename_dup_cols_in_two_dfs(prev_df, df)
+    df = pd.concat([df1, df2], axis=1)
 
     df = many_x_y_to_x_many_y(df, cap=cap, new_x=new_x)
     df.reset_index(drop=True, inplace=True)

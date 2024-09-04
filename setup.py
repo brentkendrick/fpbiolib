@@ -12,9 +12,9 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 install_requires = [
-    "pandas>=2.0",
-    "numpy>=1.26.0",
-    "scipy>=1.7.3",
+    "pandas>=2.2.2",
+    "numpy>=2.1.1",
+    "scipy>=1.14.1",
 ]
 
 setup(

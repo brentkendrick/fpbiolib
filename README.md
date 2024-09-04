@@ -152,6 +152,14 @@ in a requirements.txt file:
 -f git+https://github.com/brentkendrick/fpbiolib@v0.4.0
 ```
 
+## Deploy to CodeArtifact
+
+```bash
+python setup.py sdist bdist_wheel
+aws codeartifact login --tool twine --domain norbi --repository norbi
+twine upload --repository codeartifact dist/*
+```
+
 ## Deploy to pypi (not currently on pypi, just fyi)
 
 ```bash

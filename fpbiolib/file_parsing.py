@@ -1,15 +1,17 @@
+# stdlib
 import base64
 import csv
 import io
 import re
 import struct
 from collections import OrderedDict
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from chemlabparser.parser import FileReader
-from scipy.io.netcdf import NetCDFFile
+
+# 3rd party
+from netCDF4 import Dataset  # type: ignore[import]
 
 from fpbiolib.df_cleanup import (
     cleanup_df_import,
@@ -497,24 +499,37 @@ def parse_waters_tab_arw_data(content, filename):
 def parse_cdf_data1(content, filename):
     # print("\n\n Inside parse waters")
     try:
-        f = NetCDFFile(io.BytesIO(content))
+        with open(filename, "rb") as f_io_stream:
+            buf = f_io_stream.read()
+            f = Dataset("name", mode="r", memory=buf)
 
-        tic = f.variables["ordinate_values"].data
-        tic = tic.byteswap().newbyteorder()  # Convert big endian to LE, create array
+            tic = f.variables["ordinate_values"][:].data
+            # tic = (
+            #     tic.byteswap().newbyteorder()
+            # )  # Convert big endian to little endian and make array
 
-        xstart = f.variables["detector_minimum_value"].data[()]
-        xend = f.variables["detector_maximum_value"].data[()]
-        num_points = len(tic)
+            run_length2 = f.variables[
+                "actual_run_time_length"
+            ]  # always seems to be zero...
 
-        xdata = np.linspace(xstart, xend, num_points)
+            # SAMPLING INTERVAL
+            # NOT ACCURATE WHEN CDF IS CREATED ON A ZOOMED PLOT!
+            sampling_interval = (
+                f.variables["actual_sampling_interval"][:].data / 60
+            )  # convert to minutes
 
-        filename = Path(filename)
-        if f.sample_name:
-            sample_name = f"{f.sample_name.decode('utf-8')}...{filename.stem}"
-        else:
-            sample_name = filename.stem
+            delay_time = f.variables["actual_delay_time"][:].data[()] / 60
 
-        f.close()
+            xstart = f.variables["detector_minimum_value"][:].data[()]
+            xend = f.variables["detector_maximum_value"][:].data[()]
+            num_points = len(tic)
+
+            xdata = np.linspace(xstart, xend, num_points)
+
+            if f.sample_name:
+                sample_name = f"{f.sample_name}...{filename.stem}"
+            else:
+                sample_name = filename.stem
 
         df = pd.DataFrame({"retention time (min)": xdata, sample_name: tic})
 

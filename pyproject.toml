@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fpbiolib"
+version = "0.5.2" # update packages
+description = "fpbiolib"
+readme = "README.md"
+requires-python = ">=3.5"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Brent Kendrick", email = "brent.kendrick@fp-biopharma.com"}
+]
+dependencies = [
+    "pandas>=2.2.2",
+    "numpy>=2.1.1",
+    "scipy>=1.14.1",
+    "netcdf4>=1.7.1.post2",
+]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+# You can add optional dependencies here if needed later.
+
+[tool.setuptools.packages.find]
+exclude = ["tests"]

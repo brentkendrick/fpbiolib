@@ -1,7 +1,3 @@
-# base version number
-__version__ = "0.5.0"  # update ftir file parsing
-
-
 from .formatting import (
     dec_notation,
     get_super,

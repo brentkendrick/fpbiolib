@@ -10,9 +10,7 @@ import fakeredis
 # import feather
 import pandas as pd
 import plotly
-
-# import redis
-from redis import Redis
+import redis
 
 """
 Writing a custom function for feather
@@ -52,10 +50,9 @@ class redis_store:
     """
 
     try:
-        print("\n\nREDIS_URL: ", os.environ["REDIS_URL"])
-        # r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-        r = Redis.from_url(os.environ["REDIS_URL"])
+        r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
         r.ping()
+        print("\nRedis is working in df_storage.py class redis_store")
     except Exception:
         warnings.warn("Using FakeRedis - Not suitable for Production Use!")
         r = fakeredis.FakeStrictRedis()

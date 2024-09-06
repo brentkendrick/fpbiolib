@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.5.5" # fixing df_storage redis
+version = "0.5.6" # fixed df_storage redis
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.5"

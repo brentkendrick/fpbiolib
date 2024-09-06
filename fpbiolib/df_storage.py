@@ -50,6 +50,7 @@ class redis_store:
     """
 
     try:
+        print("\n\nREDIS_URL: ", os.environ["REDIS_URL"])
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
         r.ping()
     except Exception:
@@ -97,9 +98,7 @@ class redis_store:
     def pickle_save(value, key="specify_key"):
         if isinstance(value, pd.DataFrame):
             type = "pd.DataFrame"
-            serialized_value = pickle.dumps(
-                value, protocol=pickle.HIGHEST_PROTOCOL
-            )
+            serialized_value = pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
         else:
             serialized_value = json.dumps(
                 value, cls=plotly.utils.PlotlyJSONEncoder

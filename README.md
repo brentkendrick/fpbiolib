@@ -2,182 +2,82 @@
 
 fpbiolib is a Python package that contains handy functions.
 
-## Installation and updating
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install fpbiolib like below.
-Rerun this command to check for and install updates, using the -I switch to force update.
-
-```bash
-pip install -I git+https://github.com/brentkendrick/fpbiolib
-```
-
 ## Installation
 
 Currently fpbiolib is not open source, and must be installed from source or a private
 codeartifact repository.
 
-## Mac Installation - I've had the most success with PYENV on the Mac Apple Silicon
+### Local, editable installation
 
-To ensure psycopg installs on MAC or Linux, first ensure postgres and libpq is installed
-on the local host, and included in PATH
-https://stackoverflow.com/questions/33866695/error-installing-psycopg2-on-macos-10-9-5
+Clone or download the repo and use setuptools to install the package locally.
 
-using the official python.org installers has led to some package
-incompatibilities which haven't arisen when using pyenv for python
-version management.
+With the new pyproject.toml file format, the command python setup.py develop is no longer applicable. The modern alternative is to use pip install -e ., which installs your package in "editable" mode (the equivalent of setup.py develop).
 
-Update pyenv frequently
-
-```
-brew update && brew upgrade pyenv
-```
-
-Check installed python versions
-
-```
-pyenv versions
-```
-
-Find all available python versions
-
-```
-pyenv install --list
-```
-
-Install specific python version
-
-```
-pyenv install 3.11.4
-```
-
-Set local directory and subdirectories to use specific python version
-
-```
-pyenv local 3.11.4
-```
-
-Create a virtual env with a Python version:
+Here's how to do it:
+Ensure you have the latest version of pip, setuptools, and wheel in your virtual environment:
 
 ```bash
-pyenv virtualenv 3.8.6 project1
+pip install --upgrade pip setuptools wheel
 ```
 
-List versions of virtual environments:
+To install the package in editable mode:
+
+clone the repository
 
 ```bash
-pyenv versions
+git clone https://github.com/brentkendrick/fpbiolib.git
 ```
 
-Activate a virtual version:
+Line in a requirements.txt file (assumes fpbiolib was cloned to the indicated path)
 
 ```bash
-pyenv activate project1
+-e /Users/brent/code/lib/fpbiolib
 ```
 
-Install setuptools
+Or, in your project directory, run:
+
+```bash
+pip install -e .
+```
+
+This command will install your package in a way that allows you to modify the source code and immediately see changes without needing to reinstall the package.
+
+### Installation of a specific version (good for production)
+
+```bash
+pip install fpbiolib @ git+https://github.com/brentkendrick/fpbiolib@v0.5.2
 
 ```
-pip install -U pip setuptools wheel
+
+Line in a requirements.txt file
+
+```bash
+fpbiolib @ git+https://github.com/brentkendrick/fpbiolib@v0.5.2
 ```
 
 Attempt to install all packages using requirements.txt
 
-```
+```bash
 pip install -r requirements.txt
-```
-
-Some may fail, which can often be overcome by trying a different package version
-(some get updated to the new arm architecture)
-
-After successfull install, re-try installing the entire requirements.txt file again, it should work.
-
-```
-pip install -r requirements.txt
-```
-
-### From Source
-
-Clone or download the repo and use setuptools to install the package locally. For
-standard operation this can be done using the `setup.py` file in the top level
-of the package. A development installation can also be done substituting
-`develop` for `install`.
-
-```bash
-python setup.py install
-```
-
-### From CodeArtifact
-
-To install from AWS CodeArtifact you can use the AWS CLI to autheticate pip
-as follows.
-
-```bash
-aws codeartifact login --tool pip --repository norbi --domain norbi --domain-owner 979711578039
-```
-
-To install in docker or environments that do not have AWS CLI available you can
-you can manually create a pip index url using the following
-
-```bash
-ARG AWS_DEFAULT_REGION=us-east-2
-ARG AWS_DOMAIN_OWNER=979711578039
-ARG CODEARTIFACT_DOMAIN=norbi
-ARG CODEARTIFACT_REPO=norbi
-ARG CODEARTIFACT_AUTH_TOKEN  # no default, longest possible token 12 hours
-ARG PIP_INDEX_URL="https://aws:${CODEARTIFACT_AUTH_TOKEN}@${CODEARTIFACT_DOMAIN}-${AWS_DOMAIN_OWNER}.d.codeartifact.${AWS_DEFAULT_REGION}.amazonaws.com/pypi/${CODEARTIFACT_REPO}/simple/"
-
-pip config set global.index-url PIP_INDEX_URL
-```
-
-You can then install fpcd using pip normally `pip install fpbiolib`.
-
-To reset pip to using normal pypi, run
-
-```
-pip config unset global.index-url
-```
-
-## Install with pip
-
-```bash
-pip install --upgrade pip setuptools wheel # needs these to work
-
-pip install git+https://github.com/brentkendrick/fpbiolib.git@v0.3.6
-
-```
-
-in a requirements.txt file:
-
-```bash
--f git+https://github.com/brentkendrick/fpbiolib@v0.4.0
-```
-
-## Deploy to CodeArtifact
-
-```bash
-python setup.py sdist bdist_wheel
-aws codeartifact login --tool twine --domain norbi --repository norbi
-twine upload --repository codeartifact dist/*
-```
-
-## Deploy to pypi (not currently on pypi, just fyi)
-
-```bash
-python setup.py sdist bdist_wheel
-twine check dist/*
-twine upload dist/*
 ```
 
 ### Redis usage
 
 The redis_storage module requires either a local instance of redis running on the host computer, or a docker instance of redis. This can be switched through the use of an environment variable, which can be set by creating a .env file in your project's root directory setup following the example below.
 
-```
-# If running local redis. Install for WSL2 using instructions here:
-# https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-database
+If running local redis. Install for WSL2 using instructions here:
+https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-database
 
-# To start the local redis server: sudo service redis-server start
-# To stop: sudo service redis-server stop
+To start the local redis server:
+
+```bash
+sudo service redis-server start
+```
+
+To stop:
+
+```bash
+sudo service redis-server stop
 ```
 
 The environment variables in the .env file

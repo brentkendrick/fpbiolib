@@ -1,10 +1,13 @@
 setuptools
 wheel
 twine
-pandas
-scipy
 redis
 fakeredis
 pyarrow
 dash
 dash-bootstrap-components
+
+pandas>=2.2.2
+numpy>=2.1.1
+scipy>=1.14.1
+netcdf4>=1.7.1.post2

@@ -8,12 +8,8 @@ def get_super(x):
     Very few fonts seem to render the unicode superscripts correctly.
     Menlo seems to do okay on VS Code.
     """
-    normal = (
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
-    )
-    super_s = (
-        "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
-    )
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    super_s = "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
     res = x.maketrans("".join(normal), "".join(super_s))
     return x.translate(res)
 
@@ -92,24 +88,20 @@ def to_sup(s):
         "-": "\u207b",
     }
 
-    return "".join(
-        sups.get(char, char) for char in s
-    )  # lose the list comprehension
+    return "".join(sups.get(char, char) for char in s)  # lose the list comprehension
 
 
-def process_str_list(str_list: list) -> list:
-    """Some list characters are stored as strings
-    for user readability.  Process it
+def process_str_list(str_list: str) -> list:
+    """Some lists and their characters are
+    stored as strings for user readability.  Process it
     to create a normal python list with floats.
     """
-    if not str_list:
-        return None
 
     bad_chars = "]['"
     for c in bad_chars:
         str_list = str_list.replace(c, "")
-    str_list = str_list.split(",")
-    return [float(x) for x in str_list]
+    fixed_list = str_list.split(",")
+    return [float(x) for x in fixed_list]
 
 
 def none_to_empty_str(d):

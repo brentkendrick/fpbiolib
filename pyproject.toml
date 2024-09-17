@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.5.7" # fixed process_str_list
+version = "0.5.8" # updated python version requirements for numpy compat
 description = "fpbiolib"
 readme = "README.md"
-requires-python = ">=3.5"
-license = {file = "LICENSE"}
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
 authors = [
-    {name = "Brent Kendrick", email = "brent.kendrick@fp-biopharma.com"}
+    { name = "Brent Kendrick", email = "brent.kendrick@fp-biopharma.com" },
 ]
 dependencies = [
     "pandas>=2.2.2",

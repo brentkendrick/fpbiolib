@@ -105,6 +105,13 @@ from config.settings import REDIS_URL
 r = Redis.from_url(REDIS_URL, decode_responses=True)
 ```
 
+## Updating the version
+
+Features:
+
+- make changes, then update version in pyproject.toml and upload to github.
+- tag the new image with the new version number
+
 ## Usage
 
 Features:

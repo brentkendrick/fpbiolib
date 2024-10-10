@@ -38,7 +38,6 @@ def parse_uploaded_files(contents, filenames, parser):
             dfs.append(df_i)
 
         df = pd.concat(dfs, axis=1)
-
         df = cleanup_df_import(df)
         df = fix_duplicate_col_names(df)
         df = downcast_floats_and_ints(df)
@@ -70,6 +69,9 @@ def parse_filereader_parser_data(content, filename):
     except Exception as e:
         print(e)
         raise
+    df.reset_index(drop=True, inplace=True)
+    # print("df head: ", df.head())
+    df = x_many_y_to_many_x_y(df)
 
     return df
 

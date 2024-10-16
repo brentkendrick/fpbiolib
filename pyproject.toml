@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.5.10" # Updated FileReader parser to fix x_many_y
+version = "0.5.11" # Updated file_parsing.py to fix dsx dataframe call
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

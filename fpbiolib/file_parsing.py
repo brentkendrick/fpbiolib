@@ -61,7 +61,7 @@ def parse_filereader_parser_data(content, filename):
         # print("\nsuffix: ", str(fr.filename.suffix).upper())
         # TODO work on ascending dataframes!
         if str(fr.filename.suffix).upper() == ".DSX":
-            df = fr.instance.get_traces.df
+            df = fr.get_traces.df
         else:
             df = fr.parser.df
         df = df.sort_values(by=df.columns[0])

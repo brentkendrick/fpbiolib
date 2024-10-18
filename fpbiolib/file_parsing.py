@@ -8,7 +8,6 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from chemlabparser.parser import FileReader
 
 # 3rd party
 from netCDF4 import Dataset  # type: ignore[import]
@@ -50,30 +49,6 @@ def parse_uploaded_files(contents, filenames, parser):
         upload_error = True
 
     return df, upload_error
-
-
-def parse_filereader_parser_data(content, filename):
-    try:
-        # print("filename: ", filename)
-        fr = FileReader(filename=filename, decoded_file_contents=content)
-        # print("\nfr: \n", fr)
-        # print("fr filename: ", fr.fullpath, fr.filename)
-        # print("\nsuffix: ", str(fr.filename.suffix).upper())
-        # TODO work on ascending dataframes!
-        if str(fr.filename.suffix).upper() == ".DSX":
-            df = fr.get_traces.df
-        else:
-            df = fr.parser.df
-        df = df.sort_values(by=df.columns[0])
-
-    except Exception as e:
-        print(e)
-        raise
-    df.reset_index(drop=True, inplace=True)
-    # print("df head: ", df.head())
-    df = x_many_y_to_many_x_y(df)
-
-    return df
 
 
 def parse_x_many_y_data(content, filename):

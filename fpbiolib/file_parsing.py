@@ -22,17 +22,18 @@ from fpbiolib.df_transforms import x_many_y_to_many_x_y
 # File parsing and temporary dataframe storage functions
 
 
-def parse_uploaded_files(contents, filenames, parser):
+def parse_uploaded_files(b64_encoded_contents, filenames, parser):
     """Create dataframes based on type of file loaded
     and parser function.  Since the user can click-select
     multiple files we need to append each parsed file's
     dataframe to a list and then concatenate them.
+    b64_encoded_contents are a base64 binary encoded string.
     """
     try:
         dfs = []
-        for content, filename in zip(contents, filenames):
-            content_type, content_string = content.split(",")
-            b64_content = base64.b64decode(content_string)
+        for content, filename in zip(b64_encoded_contents, filenames):
+            content_type, encoded_content_string = content.split(",")
+            b64_content = base64.b64decode(encoded_content_string)
             df_i = parser(b64_content, filename)
             dfs.append(df_i)
 

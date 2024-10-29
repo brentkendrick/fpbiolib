@@ -27,14 +27,18 @@ def parse_uploaded_files(b64_encoded_contents, filenames, parser):
     and parser function.  Since the user can click-select
     multiple files we need to append each parsed file's
     dataframe to a list and then concatenate them.
-    b64_encoded_contents are a base64 binary encoded string.
+
+    b64_encoded_contents are a base64 binary encoded string from
+    Dash dcc.Upload "contents" callback. To convert back to the
+    original file bytes, e.g. identical to with open(file, 'rb') as f
+    f.read()...use base64.b64decode(encoded_content_string)
     """
     try:
         dfs = []
         for content, filename in zip(b64_encoded_contents, filenames):
             content_type, encoded_content_string = content.split(",")
-            b64_content = base64.b64decode(encoded_content_string)
-            df_i = parser(b64_content, filename)
+            file_binary_content = base64.b64decode(encoded_content_string)
+            df_i = parser(file_binary_content, filename)
             dfs.append(df_i)
 
         df = pd.concat(dfs, axis=1)

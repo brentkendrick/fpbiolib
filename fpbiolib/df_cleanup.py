@@ -15,8 +15,46 @@ def cleanup_df_import(df):
     return df
 
 
+# General cleanup for many csv files
+def drop_df_col_row_na_unnamed(df):
+    # drop rows, columns that are all na values
+    df.dropna(how="all", axis=0, inplace=True)
+    df.dropna(how="all", axis=1, inplace=True)
+    # some dfs get read with a bunch of unnamed columns,
+    # preventing plotting and other dash viewing options!
+    if any(df.columns.str.contains("^Unnamed")):
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")].copy()
+
+    df.reset_index(drop=True, inplace=True)
+    return df
+
+
+def sort_df_x_ascending(df):
+    # ensure data is arranged so x-values are ascending
+    if df.iloc[0, 0] > df.iloc[-1, 0]:  # type: ignore
+        df.sort_values(by=df.columns[0], inplace=True)
+        df.reset_index(drop=True, inplace=True)
+    return df
+
+
+# Reduce from float 64 to float 32 helps reduce file size
+def enforce_numeric_float32_df(df):
+    # Ensure numeric columns to start
+    df = df.apply(pd.to_numeric)
+
+    fcols = df.select_dtypes("float").columns
+
+    # can't have duplicate column headings or this will fail
+    df[fcols] = df[fcols].apply(pd.to_numeric, downcast="float")
+
+    return df
+
+
 # Reduce from float 64 to float 32 helps reduce file size
 def downcast_floats_and_ints(df):
+    # Ensure numeric columns to start
+    df = df.apply(pd.to_numeric)
+
     fcols = df.select_dtypes("float").columns
     icols = df.select_dtypes("integer").columns
 

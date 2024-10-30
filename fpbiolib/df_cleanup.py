@@ -38,7 +38,10 @@ def sort_df_x_ascending(df):
 
 
 # Reduce from float 64 to float 32 helps reduce file size
-def enforce_numeric_float32_df(df):
+def fix_dups_conv_numeric_float32_df(df):
+    # Downcasting will fail if dup headings
+    df = fix_duplicate_col_names(df)
+
     # Ensure numeric columns to start
     df = df.apply(pd.to_numeric)
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.5.14" # update df_cleanup downcast func
+version = "0.5.15" # move out functions from file_parsing.py to chemlabparser
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

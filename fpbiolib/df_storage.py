@@ -52,9 +52,8 @@ class redis_store:
     try:
         r = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
         r.ping()
-        print("\nRedis is working in df_storage.py class redis_store")
     except Exception:
-        warnings.warn("Using FakeRedis - Not suitable for Production Use!")
+        warnings.warn("Using FakeRedis in df_storage.py ->redis_store - Not suitable for Production Use!")
         r = fakeredis.FakeStrictRedis()
 
     @staticmethod

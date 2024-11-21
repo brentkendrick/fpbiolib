@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.5.17" # Update df_storage.py class methods
+version = "0.5.18" # RM prints
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -30,17 +30,17 @@ def redis_connection():
         # Attempt to connect to Redis
         redis_instance = redis.StrictRedis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6379"))
         redis_instance.ping()
-        print("Redis is active!")
+        # print("Redis is active!")
         yield redis_instance
     except Exception:
         # Fall back to DiskCache if Redis is unavailable
-        warnings.warn("Using DiskCache")
+        # warnings.warn("Using DiskCache")
         redis_instance = cache
         yield redis_instance
     finally:
         # Optionally, handle any cleanup or connection closing here if needed
         if redis_instance:
-            print("Closing Redis connection (or DiskCache)...")
+            # print("Closing Redis connection (or DiskCache)...")
             # No explicit close needed for Redis or DiskCache in this case
             pass
 
@@ -205,8 +205,7 @@ class redis_store:
 
             elif value_type == "json-serialized":
                 # Decompress and deserialize JSON
-                decompressed_json = brotli.decompress(serialized_value)
-                value = json.loads(decompressed_json)
+                value = json.loads(serialized_value) # type: ignore
             else:
                 raise ValueError(f"Unknown type for key {key}: {value_type}")
         except Exception as e:
@@ -261,8 +260,7 @@ class redis_store:
 
             elif value_type == "json-serialized":
                 # Decompress and deserialize JSON
-                decompressed_json = brotli.decompress(serialized_value)
-                value = json.loads(decompressed_json)
+                value = json.loads(serialized_value) # type: ignore
             else:
                 raise ValueError(f"Unknown type for key {key}: {value_type}")
         except Exception as e:
@@ -326,7 +324,7 @@ class redis_store:
         if isinstance(value, pd.DataFrame):
             # Serialize DataFrame as a Parquet file in memory
             buffer = BytesIO()
-            value.to_parquet(buffer, compression="gzip")  # Use Brotli for Parquet compression
+            value.to_parquet(buffer, compression="gzip")
             buffer.seek(0)
             serialized_value = buffer.read()
             value_type = "pd.DataFrame"

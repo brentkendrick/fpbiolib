@@ -14,8 +14,8 @@ import pickle
 from io import BytesIO
 
 
-cache = Cache(directory=None)  # Uses RAM only
-# cache = Cache(directory='/tmp/cache') # Uses hybrid caching (RAM + disk)
+# cache = Cache(directory=None)  # Uses RAM only
+cache = Cache(directory='/tmp/cache') # Uses hybrid caching (RAM + disk)
 
 
 # Context manager to initialize Redis

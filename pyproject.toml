@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.6.1" # Update gaussian.py to include interpolator for guessing peak heights (needed for some MMS files)
+version = "0.6.2" # Update df_transforms many_x_y_to_x_many_y function to handle custom num of rows
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

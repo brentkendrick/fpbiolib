@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.7.0" # Major update to cache_utils to enable data store verification
+version = "0.7.1" # Added atomic cache approach, combining value and value_type in the pickle payload. 
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

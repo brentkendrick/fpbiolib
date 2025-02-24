@@ -30,6 +30,51 @@ class DataCache:
         """Compute a SHA-512 hash for the serialized object."""
         return hashlib.sha512(serialized_obj).hexdigest()
 
+    def atomic_pickle_save(self, value, key="specify_key"):
+        """
+        Atomically save the value by combining the serialized data and its type
+        into a single payload.
+        """
+        if isinstance(value, pd.DataFrame):
+            value_type = "pd.DataFrame"
+            serialized_value = pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
+        else:
+            serialized_value = json.dumps(
+                value, cls=plotly.utils.PlotlyJSONEncoder
+            ).encode("utf-8")
+            value_type = "json-serialized"
+
+        # Combine both into one payload
+        payload = {
+            "value": serialized_value,
+            "type": value_type
+        }
+        # Serialize the payload in one operation
+        combined_payload = pickle.dumps(payload, protocol=pickle.HIGHEST_PROTOCOL)
+        # Use a single key for the combined payload
+        self.cache.set(f"_payload_{key}", combined_payload)
+
+    def atomic_pickle_load(self, key):
+        """
+        Atomically load and deserialize the payload.
+        """
+        combined_payload = self.cache.get(f"_payload_{key}")
+        if not combined_payload:
+            raise ValueError(f"Key {key} not found in the cache.")
+
+        # Deserialize the payload
+        payload = pickle.loads(combined_payload)
+        value_type = payload.get("type")
+        serialized_value = payload.get("value")
+
+        if value_type == "pd.DataFrame":
+            return pickle.loads(serialized_value)
+        elif value_type == "json-serialized":
+            return json.loads(serialized_value)
+        else:
+            raise ValueError(f"Unknown type for key {key}: {value_type}")
+
+
     def pickle_save(self, value, key="specify_key"):
         """
         Pickle and save the value to the cache backend with the specified key.
@@ -336,15 +381,16 @@ class DataCache:
             RuntimeError: If after max_attempts the reloaded value does not match the original.
         """
         # Save the value using the standard pickle_save method
-        self.pickle_save(value, key)
+        # print("key inside cache_utils: ", key)
+        self.atomic_pickle_save(value, key=key)
 
         for attempt in range(max_attempts):
-            loaded_value = self.pickle_load(key)
+            loaded_value = self.atomic_pickle_load(key)
 
             # For DataFrames, use .equals() for an exact comparison.
             if isinstance(value, pd.DataFrame):
                 if loaded_value is not None and loaded_value.equals(value):
-                    print(f"pickled df is equivalent")
+                    # print(f"pickled df is equivalent")
                     return loaded_value
             # For other JSON-serializable objects, use the normal equality operator.
             else:

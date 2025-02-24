@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.6.2" # Update df_transforms many_x_y_to_x_many_y function to handle custom num of rows
+version = "0.7.0" # Major update to cache_utils to enable data store verification
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"

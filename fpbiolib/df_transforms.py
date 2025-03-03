@@ -135,7 +135,7 @@ def x_many_y_interpolate(df, cap=True):
     return downcast_floats_and_ints(proc_df)
 
 
-def many_x_y_to_x_many_y(df, cap=True, new_x=True, num_rows=None):
+def many_x_y_to_x_many_y(df, cap=True, new_x=True, num_rows=None, x_data=[]):
     """
     Generally, datasets visualized with this app don't need any
     more than 5000 points.
@@ -167,6 +167,10 @@ def many_x_y_to_x_many_y(df, cap=True, new_x=True, num_rows=None):
     else:
         x_new = np.linspace(new_x_start, new_x_end, num_rows)
     
+    if x_data.any():
+        x_new = x_data
+        new_x_start = x_data.min()
+        new_x_end = x_data.max()
 
     # Create new dataframe to eventually hold interpolated y data
     proc_df = pd.DataFrame(x_new, columns=["x_data"])

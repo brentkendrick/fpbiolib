@@ -167,10 +167,12 @@ def many_x_y_to_x_many_y(df, cap=True, new_x=True, num_rows=None, x_data=[]):
     else:
         x_new = np.linspace(new_x_start, new_x_end, num_rows)
     
-    if x_data.any():
-        x_new = x_data
-        new_x_start = x_data.min()
-        new_x_end = x_data.max()
+    # Convert my_var to a numpy array regardless of whether it's a list or already an array
+    x_array = np.array(x_data)
+    if x_array.any():
+        x_new = x_array
+        new_x_start = x_array.min()
+        new_x_end = x_array.max()
 
     # Create new dataframe to eventually hold interpolated y data
     proc_df = pd.DataFrame(x_new, columns=["x_data"])

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fpbiolib"
-version = "0.7.2" # Updated many_x_y_to_x_many_y to accept x_data param 
+version = "0.7.3" # Fixed type error with x_data param 
 description = "fpbiolib"
 readme = "README.md"
 requires-python = ">=3.9"
